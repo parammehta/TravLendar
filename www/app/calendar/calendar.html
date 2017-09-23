@@ -1,0 +1,8 @@
+<div ng-bind="calendarCtrl.message"></div>
+<div><button type="button" class="btn btn-primary" ng-click="calendarCtrl.fetchDummyAPIDetails()">FETCH FROM DB</button></div>
+
+<div class="row" ng-repeat="user in calendarCtrl.Users">
+    <div class="col-xs-2" ng-bind="user.id"></div>
+    <div class="col-xs-10" ng-bind="user.name"></div>
+</div>
+

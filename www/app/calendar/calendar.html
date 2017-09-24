@@ -6,3 +6,13 @@
     <div class="col-xs-10" ng-bind="user.name"></div>
 </div>
 
+<mwl-calendar
+    view="calendarCtrl.calendarView"
+    view-date="calendarCtrl.dateView"
+    events="events"
+    view-title="calendarTitle"
+    on-event-click="eventClicked(calendarEvent)"
+    on-event-times-changed="calendarEvent.startsAt = calendarNewEventStart; calendarEvent.endsAt = calendarNewEventEnd"
+    cell-is-open="true">
+</mwl-calendar>
+

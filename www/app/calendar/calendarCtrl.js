@@ -8,6 +8,8 @@
     function CalendarCtrl(CalendarService){
         var vm = this;
         vm.Users = [];
+        vm.calendarView = "month";
+        vm.dateView = new Date();
         vm.fetchDummyAPIDetails = fetchDummyAPIDetails;
         this.message = "Hello from Calendar controller";
         

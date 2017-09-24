@@ -1,6 +1,6 @@
 (function () {
     'use strict'
-    angular.module('travlendarApp', ['Login', 'Calendar', 'ui.router']);
+    angular.module('travlendarApp', ['Login', 'Calendar', 'ui.router', 'mwl.calendar', 'ui.bootstrap']);
 
     angular.module('travlendarApp').config(config);
     //angular.module('travlendarApp').run(run);
@@ -8,7 +8,7 @@
     config.$inject = ['$stateProvider', '$urlRouterProvider'];
 
     function config($stateProvider, $urlRouterProvider) {
-        $urlRouterProvider.otherwise("/login");
+        $urlRouterProvider.otherwise("/calendar");
         $stateProvider.state('login', {
             url: '/login',
             templateUrl: 'app/login/login.html',

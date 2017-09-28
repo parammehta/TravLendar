@@ -1,18 +1,14 @@
 (function () {
     angular.module('Calendar').service('CalendarService', CalendarService);
 
-    CalendarService.$inject = ['$http', '$q'];
+    CalendarService.$inject = ['centralAPIService', '$rootScope'];
 
-    function CalendarService($http, $q) {
+    function CalendarService(centralAPIService, $rootScope) {
         var vm = this;
         vm.fetchDummyAPIDetails = fetchDummyAPIDetails;
 
         function fetchDummyAPIDetails() {
-            var deferred = $q.defer();
-            $http.post(CALENDAR_API).then(function (data) {
-                deferred.resolve(data);
-            })
-            return deferred.promise;
+            return centralAPIService.callAPI("calendar", {}, "POST");
         }
     }
 })();

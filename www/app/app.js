@@ -3,7 +3,6 @@
     angular.module('travlendarApp', ['Login', 'Calendar', 'ui.router', 'mwl.calendar', 'ui.bootstrap']);
 
     angular.module('travlendarApp').config(config);
-    //angular.module('travlendarApp').run(run);
 
     config.$inject = ['$stateProvider', '$urlRouterProvider'];
 

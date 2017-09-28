@@ -15,7 +15,7 @@
         
         function fetchDummyAPIDetails(){
             CalendarService.fetchDummyAPIDetails().then(function(data){
-                vm.Users = data.data.Items;
+                vm.Users = data.Items;
             });
         }
     }

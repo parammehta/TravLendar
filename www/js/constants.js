@@ -1,2 +1,11 @@
-STAGE = "dev"
+STAGE = "dev";
+
+DOMAIN_URL = "https://travlendar.auth.us-west-2.amazoncognito.com/";
+CLIENT_ID = "6bupvvcgul3khv72jsmaa8mnno";
+AUTH_URL = "https://travlendar.auth.us-west-2.amazoncognito.com/login?response_type=code&client_id=6bupvvcgul3khv72jsmaa8mnno&redirect_uri=";
+REDIRECT_URI = "https://localhost:4443";
+
+
+//API's
+
 CALENDAR_API = "https://xbfmz7x8c7.execute-api.us-west-2.amazonaws.com/" + STAGE + "/calendar";

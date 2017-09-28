@@ -52,11 +52,11 @@
                         $rootScope.idToken = response.id_token;
                         deferred.resolve(true);
                     }).fail(function (error) {
-                        window.location.replace(AUTH_URL + REDIRECT_URI);
+                        window.location.replace(AUTH_URL + REDIRECT_URI + "&response_type=code");
                         deferred.reject(false);
                     });
                 } else {
-                    window.location.replace(AUTH_URL + REDIRECT_URI);
+                    window.location.replace(AUTH_URL + REDIRECT_URI + "&response_type=code");
                     deferred.reject(false);
                 }
             }

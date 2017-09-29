@@ -1,2 +1,13 @@
 @import 'partials/calendar.scss';
 @import 'partials/login.scss';
+
+#logo{
+    width: 200px;
+}
+.nav-link{
+    i{
+        margin-right: 10px;
+    }
+    font-size: 25px;
+    color: #3939ac;
+}

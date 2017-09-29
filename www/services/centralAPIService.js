@@ -2,9 +2,9 @@
     'use strict';
     angular.module('travlendarApp').service('centralAPIService', centralAPIService);
 
-    centralAPIService.$inject = ['$q', '$rootScope'];
+    centralAPIService.$inject = ['$q', '$rootScope', 'authService'];
 
-    function centralAPIService($q, $rootScope) {
+    function centralAPIService($q, $rootScope, authService) {
         var vm = this;
         vm.callAPI = callAPI;
 
@@ -29,8 +29,15 @@
                 "data": payload
             }
 
-            $.ajax(settings).then(function (response) {
+            $.ajax(settings).done(function (response) {
                 deferred.resolve(response);
+            }).fail(function(response){
+                if(response.status === 401 && response.responseJSON.message === "Identity token has expired"){
+                    authService.refresh().then(function(data){
+                        console.log(data);
+                        callAPI(module, payload, method);
+                    })
+                }
             });
             return deferred.promise;
         }

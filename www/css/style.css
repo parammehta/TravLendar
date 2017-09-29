@@ -2,3 +2,18 @@
 .test-style {
   color: red;
 }
+
+/* line 4, ../scss/style.scss */
+#logo {
+  width: 200px;
+}
+
+/* line 7, ../scss/style.scss */
+.nav-link {
+  font-size: 25px;
+  color: #3939ac;
+}
+/* line 8, ../scss/style.scss */
+.nav-link i {
+  margin-right: 10px;
+}

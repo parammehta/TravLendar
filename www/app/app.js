@@ -1,6 +1,6 @@
 (function () {
     'use strict'
-    angular.module('travlendarApp', ['Login', 'Calendar', 'ui.router', 'mwl.calendar', 'ui.bootstrap']);
+    angular.module('travlendarApp', ['Login', 'Calendar', 'Profile', 'ui.router', 'mwl.calendar', 'ui.bootstrap']);
 
     angular.module('travlendarApp').config(config);
 
@@ -16,6 +16,10 @@
             url: '/calendar',
             templateUrl: 'app/calendar/calendar.html',
             controller: 'CalendarCtrl as calendarCtrl'
+        }).state('profile', {
+            url: '/profile',
+            templateUrl: 'app/profile/profile.html',
+            controller: 'ProfileCtrl as profileCtrl'
         });
     }
 })();

@@ -8,8 +8,8 @@
         var vm = this;
         vm.callAPI = callAPI;
 
-        function callAPI(module, payload, method) {
-            var deferred = $q.defer();
+        function callAPI(module, payload, method, deferred) {
+            var deferred = deferred ? deferred : $q.defer();
             var url = CALENDAR_API;
             switch (module) {
                 case "calendar":
@@ -35,7 +35,7 @@
                 if(response.status === 401 && response.responseJSON.message === "Identity token has expired"){
                     authService.refresh().then(function(data){
                         console.log(data);
-                        callAPI(module, payload, method);
+                        callAPI(module, payload, method, deferred);
                     })
                 }
             });

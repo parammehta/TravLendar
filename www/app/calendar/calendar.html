@@ -1,18 +1,36 @@
-<div ng-bind="calendarCtrl.message"></div>
-<div><button type="button" class="btn btn-primary" ng-click="calendarCtrl.fetchDummyAPIDetails()">FETCH FROM DB</button></div>
+<h2 class="text-center">{{calendarCtrl.calendarTitle}}</h2>
 
-<div class="row" ng-repeat="user in calendarCtrl.Users">
-    <div class="col-xs-2" ng-bind="user.id"></div>
-    <div class="col-xs-10" ng-bind="user.name"></div>
+<div class="row">
+    <div class="col-md-6 text-center">
+        <div class="btn-group">
+            <button class="btn btn-primary" mwl-date-modifier date="calendarCtrl.viewDate" decrement="calendarCtrl.calendarView" ng-click="calendarCtrl.cellIsOpen = false">
+          Previous
+        </button>
+            <button class="btn btn-default" mwl-date-modifier date="calendarCtrl.viewDate" set-to-today ng-click="calendarCtrl.cellIsOpen = false">
+          Today
+        </button>
+            <button class="btn btn-primary" mwl-date-modifier date="calendarCtrl.viewDate" increment="calendarCtrl.calendarView" ng-click="calendarCtrl.cellIsOpen = false">
+          Next
+        </button>
+        </div>
+    </div>
+    <br class="visible-xs visible-sm">
+    <div class="col-md-6 text-center">
+        <div class="btn-group">
+            <label class="btn btn-primary" ng-model="calendarCtrl.calendarView" uib-btn-radio="'year'" ng-click="calendarCtrl.cellIsOpen = false">Year</label>
+            <label class="btn btn-primary" ng-model="calendarCtrl.calendarView" uib-btn-radio="'month'" ng-click="calendarCtrl.cellIsOpen = false">Month</label>
+            <label class="btn btn-primary" ng-model="calendarCtrl.calendarView" uib-btn-radio="'week'" ng-click="calendarCtrl.cellIsOpen = false">Week</label>
+            <label class="btn btn-primary" ng-model="calendarCtrl.calendarView" uib-btn-radio="'day'" ng-click="calendarCtrl.cellIsOpen = false">Day</label>
+        </div>
+    </div>
 </div>
 
-<mwl-calendar
-    view="calendarCtrl.calendarView"
-    view-date="calendarCtrl.dateView"
-    events="events"
-    view-title="calendarTitle"
-    on-event-click="eventClicked(calendarEvent)"
-    on-event-times-changed="calendarEvent.startsAt = calendarNewEventStart; calendarEvent.endsAt = calendarNewEventEnd"
-    cell-is-open="true">
+<mwl-calendar 
+              view="calendarCtrl.calendarView" 
+              view-date="calendarCtrl.viewDate" 
+              events="calendarCtrl.events" 
+              view-title="calendarCtrl.calendarTitle" 
+              on-event-click="eventClicked(calendarEvent)" 
+              on-event-times-changed="calendarEvent.startsAt = calendarNewEventStart; calendarEvent.endsAt = calendarNewEventEnd"
+              cell-is-open="true">
 </mwl-calendar>
-

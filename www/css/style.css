@@ -1,8 +1,3 @@
-/* line 1, ../scss/partials/_calendar.scss */
-.test-style {
-  color: red;
-}
-
 /* line 4, ../scss/style.scss */
 #logo {
   width: 200px;
@@ -16,4 +11,14 @@
 /* line 8, ../scss/style.scss */
 .nav-link i {
   margin-right: 10px;
+}
+
+/* line 14, ../scss/style.scss */
+.main-view {
+  padding: 10px 20px;
+}
+
+/* line 17, ../scss/style.scss */
+.logout-button {
+  margin-top: 10px;
 }

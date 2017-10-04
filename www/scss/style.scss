@@ -17,3 +17,14 @@
 .logout-button{
     margin-top:10px;
 }
+body.modal-open .modal {
+    display: flex !important;
+    height: 100%;
+} 
+
+body.modal-open .modal .modal-dialog {
+    margin: auto;
+}
+.pac-container {
+    z-index: 1051 !important;
+}

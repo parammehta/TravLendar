@@ -22,3 +22,19 @@
 .logout-button {
   margin-top: 10px;
 }
+
+/* line 20, ../scss/style.scss */
+body.modal-open .modal {
+  display: flex !important;
+  height: 100%;
+}
+
+/* line 25, ../scss/style.scss */
+body.modal-open .modal .modal-dialog {
+  margin: auto;
+}
+
+/* line 28, ../scss/style.scss */
+.pac-container {
+  z-index: 1051 !important;
+}

@@ -1,30 +1,36 @@
+/*global angular*/
+
 (function () {
     'use strict';
     angular.module('Profile', []);
     angular.module('Profile').controller('ProfileCtrl', ProfileCtrl);
 
-    ProfileCtrl.$inject = ['profileService'];
+    ProfileCtrl.$inject = ['profileService', '$rootScope'];
 
-    function ProfileCtrl(profileService) {
+    function ProfileCtrl(profileService, $rootScope) {
         var vm = this;
         
         //variables for home address
-        vm.homeAutocomplete = '';
+        vm.homeAutocomplete = $rootScope.homeLocation.formatted_address;
         vm.homeOptions = {};
-        vm.homeDetails = {};
+        vm.homeDetails = $rootScope.homeLocation;
         vm.initialHomeAddress = null;
-        
+
         //variables for work address
-        vm.workAutocomplete = '';
+        vm.workAutocomplete = $rootScope.workLocation.formatted_address;
         vm.workOptions = {};
-        vm.workDetails = {};
+        vm.workDetails = $rootScope.workLocation;
         vm.initialWorkAddress = null;
 
-        vm.submitForm = submitForm;
+        vm.saveUserLocation = saveUserLocation;
 
-        function submitForm() {
-            console.log(vm.homeDetails);
-            console.log(vm.workDetails);
+        function saveUserLocation() {
+            if (vm.homeDetails.place_id) {
+                profileService.saveUserLocation(vm.homeDetails, vm.workDetails).then(function () {
+                   $rootScope.homeLocation = vm.homeDetails;
+                   $rootScope.workLocation = vm.workDetails;
+                })
+            }
         }
     }
 })();

@@ -8,7 +8,7 @@
         vm.fetchDummyAPIDetails = fetchDummyAPIDetails;
 
         function fetchDummyAPIDetails() {
-            return centralAPIService.callAPI("calendar", {}, "POST");
+            return centralAPIService.callAPI("calendar", {}, "post");
         }
     }
 })();

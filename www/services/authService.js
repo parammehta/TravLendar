@@ -1,3 +1,5 @@
+/*global angular, localStorage, STAGE, CLIENT_ID, REDIRECT_URI, $, window, location, AUTH_URL, DOMAIN_URL*/
+
 (function () {
     'use strict';
     angular.module("travlendarApp").service("authService", authService);
@@ -26,6 +28,7 @@
             var deferred = $q.defer();
             if (localStorage.getItem("tvIDToken" + STAGE)) {
                 $rootScope.idToken = localStorage.getItem("tvIDToken" + STAGE);
+                $http.defaults.headers.common.Authorization = $rootScope.idToken;
                 deferred.resolve(true);
             } else {
                 var code = findGetParameter("code");
@@ -51,8 +54,9 @@
                         localStorage.setItem("tvIDToken" + STAGE, response.id_token);
                         localStorage.setItem("tvRefreshToken" + STAGE, response.refresh_token);
                         $rootScope.idToken = response.id_token;
+                        $http.defaults.headers.common.Authorization = response.id_token;
                         deferred.resolve(true);
-                    }).fail(function (error) {
+                    }).fail(function () {
                         window.location.replace(AUTH_URL + REDIRECT_URI + "&response_type=code");
                         deferred.reject(false);
                     });
@@ -79,6 +83,7 @@
             $http.post("https://xbfmz7x8c7.execute-api.us-west-2.amazonaws.com/dev/refresh", payload).then(function(data){
                 localStorage.setItem("tvIDToken" + STAGE, data.data.AuthenticationResult.IdToken);
                 $rootScope.idToken = data.data.AuthenticationResult.IdToken;
+                $http.defaults.headers.common.Authorization = $rootScope.idToken;
                 deferred.resolve(data);
             })
             return deferred.promise;

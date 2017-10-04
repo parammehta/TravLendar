@@ -9,3 +9,4 @@ REDIRECT_URI = "https://localhost:4443";
 //API's
 
 CALENDAR_API = "https://xbfmz7x8c7.execute-api.us-west-2.amazonaws.com/" + STAGE + "/calendar";
+PROFILE_API = "https://xbfmz7x8c7.execute-api.us-west-2.amazonaws.com/" + STAGE + "/profile";

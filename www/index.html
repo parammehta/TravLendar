@@ -53,17 +53,19 @@
                         <h4 class="modal-title" id="myModalLabel">Select Address's</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Home Address</label>
-                            <input type="text" ng-places-autocomplete ng-model="mainCtrl.homeAutocomplete" class="form-control"  details="mainCtrl.homeDetails" initial-address="mainCtrl.initialAddress" />
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputPassword1">Work Address</label>
-                            <input type="text" ng-places-autocomplete ng-model="mainCtrl.workAutocomplete" class="form-control"  details="mainCtrl.workDetails" initial-address="mainCtrl.initialAddress" />
-                        </div>
+                        <form name="userLocationForm" novalidate>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Home Address</label>
+                                <input type="text" ng-places-autocomplete ng-model="mainCtrl.homeAutocomplete" class="form-control" details="mainCtrl.homeDetails" initial-address="mainCtrl.initialAddress" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Work Address</label>
+                                <input type="text" ng-places-autocomplete ng-model="mainCtrl.workAutocomplete" class="form-control" details="mainCtrl.workDetails" initial-address="mainCtrl.initialAddress" />
+                            </div>
+                        </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" ng-click="mainCtrl.saveUserLocation()">Save changes</button>
+                        <button type="button" class="btn btn-primary" ng-click="mainCtrl.saveUserLocation()" ng-disabled="userLocationForm.$invalid">Save changes</button>
                     </div>
                 </div>
             </div>

@@ -1,3 +1,5 @@
+/*global angular*/
+
 (function () {
     'use strict'
     angular.module('travlendarApp', ['Login', 'Calendar', 'Profile', 'ui.router', 'mwl.calendar', 'ui.bootstrap', 'ngPlacesAutocomplete']);

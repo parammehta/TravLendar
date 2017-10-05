@@ -3,38 +3,49 @@
   width: 200px;
 }
 
-/* line 7, ../scss/style.scss */
+/* line 8, ../scss/style.scss */
 .nav-link {
   font-size: 25px;
   color: #3939ac;
 }
-/* line 8, ../scss/style.scss */
+/* line 9, ../scss/style.scss */
 .nav-link i {
   margin-right: 10px;
 }
 
-/* line 14, ../scss/style.scss */
+/* line 16, ../scss/style.scss */
 .main-view {
   padding: 10px 20px;
 }
 
-/* line 17, ../scss/style.scss */
+/* line 20, ../scss/style.scss */
 .logout-button {
   margin-top: 10px;
 }
 
-/* line 20, ../scss/style.scss */
+/* line 24, ../scss/style.scss */
 body.modal-open .modal {
   display: flex !important;
   height: 100%;
 }
 
-/* line 25, ../scss/style.scss */
+/* line 29, ../scss/style.scss */
 body.modal-open .modal .modal-dialog {
   margin: auto;
 }
 
-/* line 28, ../scss/style.scss */
+/* line 33, ../scss/style.scss */
 .pac-container {
   z-index: 1051 !important;
+}
+
+/* line 37, ../scss/style.scss */
+.loader {
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background: url("../images/loader.gif") 50% 50% no-repeat;
 }

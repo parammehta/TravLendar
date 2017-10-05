@@ -11,6 +11,7 @@
         vm.callAPI = callAPI;
 
         function callAPI(module, payload, method, deferred) {
+            $rootScope.displayLoader = true;
             var deferredObject = deferred ? deferred : $q.defer();
             var url = CALENDAR_API;
             switch (module) {
@@ -25,6 +26,7 @@
             }
             
             $http[method](url, payload).then(function(response){
+                $rootScope.displayLoader = false;
                 deferredObject.resolve(response);
             }, function(response){
                 if (response.status === 401 && response.data.message === "Identity token has expired") {
@@ -32,27 +34,8 @@
                         callAPI(module, payload, method, deferredObject);
                     });
                 }
+                $rootScope.displayLoader = false;
             })
-            /*var settings = {
-                "async": true,
-                "crossDomain": true,
-                "url": url,
-                "method": method,
-                "headers": {
-                    "Authorization": $rootScope.idToken
-                },
-                "data": payload
-            };
-
-            $.ajax(settings).done(function (response) {
-                deferredObject.resolve(response);
-            }).fail(function (response) {
-                if (response.status === 401 && response.responseJSON.message === "Identity token has expired") {
-                    authService.refresh().then(function () {
-                        callAPI(module, payload, method, deferredObject);
-                    });
-                }
-            });*/
             return deferredObject.promise;
         }
     }

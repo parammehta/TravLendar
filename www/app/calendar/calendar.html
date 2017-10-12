@@ -25,12 +25,62 @@
     </div>
 </div>
 
-<mwl-calendar 
-              view="calendarCtrl.calendarView" 
-              view-date="calendarCtrl.viewDate" 
-              events="calendarCtrl.events" 
-              view-title="calendarCtrl.calendarTitle" 
-              on-event-click="eventClicked(calendarEvent)" 
-              on-event-times-changed="calendarEvent.startsAt = calendarNewEventStart; calendarEvent.endsAt = calendarNewEventEnd"
-              cell-is-open="true">
+<mwl-calendar view="calendarCtrl.calendarView" view-date="calendarCtrl.viewDate" events="calendarCtrl.events" view-title="calendarCtrl.calendarTitle" on-event-click="eventClicked(calendarEvent)" on-event-times-changed="calendarEvent.startsAt = calendarNewEventStart; calendarEvent.endsAt = calendarNewEventEnd" cell-is-open="true">
 </mwl-calendar>
+
+<div class="row add-meeting-row">
+    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#meetingModal" ng-click="calendarCtrl.initiateScheduleMeeting()"><i class="fa fa-plus add-icon" aria-hidden="true"></i>ADD MEETING</button>
+</div>
+
+<div class="modal fade" id="meetingModal" tabindex="-1" role="dialog" aria-labelledby="meetingModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="meetingModal">Schedule Meeting</h4>
+            </div>
+            <div class="modal-body">
+                <label>Meeting Start:</label>
+                <div class="form-group">
+                    <div class='input-group date' id='meetingStart'>
+                        <input type='text' class="form-control" />
+                        <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Meeting End:</label>
+                    <div class='input-group date' id='meetingEnd'>
+                        <input type='text' class="form-control" />
+                        <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Meeting Location</label>
+                    <input type="text" ng-places-autocomplete ng-model="calendarCtrl.meetingAutocomplete" class="form-control" details="calendarCtrl.meetingLocationDetails" initial-address="calendarCtrl.initialAddress" required />
+                </div>
+                <label>Prior Location</label>
+                <div class="form-group">
+                    <select class="form-control col-md-5" ng-model="calendarCtrl.selectedPriorLocation">
+                        <option value="home">Home</option>
+                        <option value="work">Work</option>
+                        <option value="prior">Prior Meeting Location</option>
+                        <option value="other">Other Location</option>
+                    </select>
+                </div>
+                <div class="animate-switch-container" ng-switch on="calendarCtrl.selectedPriorLocation">
+                    <div class="animate-switch" ng-switch-when="home" ng-bind="homeLocation.formatted_address"></div>
+                    <div class="animate-switch" ng-switch-when="work" ng-bind="workLocation.formatted_address"></div>
+                    <div class="animate-switch" ng-switch-default>default</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -5,6 +5,7 @@
     angular.module('travlendarApp', ['Login', 'Calendar', 'Profile', 'ui.router', 'mwl.calendar', 'ui.bootstrap', 'ngPlacesAutocomplete']);
 
     angular.module('travlendarApp').config(config);
+    angular.module('travlendarApp').run(run);
 
     config.$inject = ['$stateProvider', '$urlRouterProvider'];
 
@@ -23,5 +24,12 @@
             templateUrl: 'app/profile/profile.html',
             controller: 'ProfileCtrl as profileCtrl'
         });
+    }
+
+    run.$inject = ['$rootScope', '$state', '$stateParams'];
+
+    function run($rootScope, $state, $stateParams) {
+        $rootScope.$state = $state;
+        $rootScope.$stateParams = $stateParams;
     }
 })();

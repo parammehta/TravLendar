@@ -3,9 +3,9 @@
     'use strict';
     angular.module('Profile').service('profileService', profileService);
 
-    profileService.$inject = ['$http', 'centralAPIService'];
+    profileService.$inject = ['$http', 'centralAPIService', '$rootScope'];
 
-    function profileService($http, centralAPIService) {
+    function profileService($http, centralAPIService, $rootScope) {
         var vm = this;
 
         vm.currentUserLocation = null;
@@ -32,6 +32,8 @@
                     formatted_address: workDetails.formatted_address
                 }
             }
+            $rootScope.homeLocation = homeDetails;
+            $rootScope.workLocation = workDetails;
             return centralAPIService.callAPI('profile', payload, "post");
         }
 

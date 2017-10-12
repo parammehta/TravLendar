@@ -4,20 +4,19 @@
     'use strict';
     angular.module('travlendarApp').controller('MainCtrl', MainCtrl);
 
-    MainCtrl.$inject = ['$window', '$http', 'authService', 'profileService'];
+    MainCtrl.$inject = ['$window', '$http', 'authService', 'profileService', '$timeout', '$rootScope'];
 
-    function MainCtrl($window, $http, authService, profileService) {
+    function MainCtrl($window, $http, authService, profileService, $timeout, $rootScope) {
         var vm = this;
 
         //variables
         vm.isUserAuthenticated = false;
+        vm.displayLocationModal = false;
 
 
         //variables for home address
         vm.homeAutocomplete = '';
         vm.homeDetails = {};
-        vm.initialHomeAddress = null;
-
         //variables for work address
         vm.workAutocomplete = '';
         vm.workDetails = {};
@@ -32,10 +31,16 @@
             if (vm.isUserAuthenticated) {
                 profileService.fetchUserLocations().then(function (data) {
                     if (!data.data.Item) {
-                        $('#locationModal').modal('show');
+                        vm.displayLocationModal = true;
+                        $timeout(function () {
+                            $('#locationModal').modal('show');
+                        })
+
                     } else {
                         profileService.homeLocation = data.data.Item.homeLocation;
                         profileService.workLocation = data.data.Item.workLocation;
+                        $rootScope.homeLocation = data.data.Item.homeLocation;
+                        $rootScope.workLocation = data.data.Item.workLocation;
                     }
                 })
             }
@@ -45,7 +50,12 @@
             profileService.saveUserLocation(vm.homeDetails, vm.workDetails).then(function () {
                 profileService.homeLocation = vm.homeDetails;
                 profileService.workLocation = vm.workDetails;
+                $rootScope.homeLocation = vm.homeDetails;
+                $rootScope.workLocation = vm.workDetails;
                 $('#locationModal').modal('hide');
+                $timeout(function () {
+                    vm.displayLocationModal = false;
+                },3000)
             })
         }
 

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="bower_components/angular-bootstrap/ui-bootstrap-csp.css" />
     <link rel="stylesheet" href="bower_components/angular-bootstrap-calendar/dist/css/angular-bootstrap-calendar.min.css">
     <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="css/style.css" />
 </head>
 
@@ -45,21 +46,20 @@
         <div data-ui-view class="main-view"></div>
 
 
-        <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="locationModal" data-backdrop="static" data-keyboard="false">
+        <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="locationModal" data-backdrop="static" data-keyboard="false" ng-if="mainCtrl.displayLocationModal">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
                         <h4 class="modal-title" id="myModalLabel">Select Address's</h4>
                     </div>
                     <div class="modal-body">
                         <form name="userLocationForm" novalidate>
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Home Address</label>
+                                <label>Home Address</label>
                                 <input type="text" ng-places-autocomplete ng-model="mainCtrl.homeAutocomplete" class="form-control" details="mainCtrl.homeDetails" initial-address="mainCtrl.initialAddress" required />
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputPassword1">Work Address</label>
+                                <label>Work Address</label>
                                 <input type="text" ng-places-autocomplete ng-model="mainCtrl.workAutocomplete" class="form-control" details="mainCtrl.workDetails" initial-address="mainCtrl.initialAddress" />
                             </div>
                         </form>
@@ -81,6 +81,7 @@
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="bower_components/ng-autocomplete-places/src/ngPlacesAutocomplete.js"></script>
+    <script src="bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOD1obaKMooT5SVbWwukvqImOLPdQBMHE&libraries=places"></script>
 
     <script src="js/constants.js"></script>

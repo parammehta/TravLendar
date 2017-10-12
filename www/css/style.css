@@ -1,3 +1,13 @@
+/* line 1, ../scss/partials/_calendar.scss */
+.add-meeting-row {
+  margin-top: 15px;
+  text-align: right;
+}
+/* line 4, ../scss/partials/_calendar.scss */
+.add-meeting-row .add-icon {
+  margin-right: 5px;
+}
+
 /* line 4, ../scss/style.scss */
 #logo {
   width: 200px;
@@ -39,7 +49,12 @@ body.modal-open .modal .modal-dialog {
   z-index: 1051 !important;
 }
 
-/* line 37, ../scss/style.scss */
+/* line 36, ../scss/style.scss */
+body.modal-open .datepicker {
+  z-index: 1200 !important;
+}
+
+/* line 41, ../scss/style.scss */
 .loader {
   position: fixed;
   left: 0px;

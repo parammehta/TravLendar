@@ -33,6 +33,10 @@ body.modal-open .modal .modal-dialog {
 .pac-container {
     z-index: 1051 !important;
 }
+body.modal-open .datepicker {
+    z-index: 1200 !important;
+}
+
 
 .loader {
     position: fixed;

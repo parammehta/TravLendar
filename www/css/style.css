@@ -8,53 +8,65 @@
   margin-right: 5px;
 }
 
-/* line 4, ../scss/style.scss */
+/* line 10, ../scss/partials/_calendar.scss */
+.travel-mode-table td {
+  padding-right: 7px;
+}
+/* line 12, ../scss/partials/_calendar.scss */
+.travel-mode-table td .travel-mode-icon {
+  margin-right: 10px;
+  margin-left: 5px;
+  width: 16px;
+  text-align: center;
+}
+
+/* line 3, ../scss/style.scss */
 #logo {
   width: 200px;
 }
 
-/* line 8, ../scss/style.scss */
+/* line 7, ../scss/style.scss */
 .nav-link {
   font-size: 25px;
   color: #3939ac;
 }
-/* line 9, ../scss/style.scss */
+/* line 8, ../scss/style.scss */
 .nav-link i {
   margin-right: 10px;
 }
 
-/* line 16, ../scss/style.scss */
+/* line 15, ../scss/style.scss */
 .main-view {
   padding: 10px 20px;
 }
 
-/* line 20, ../scss/style.scss */
+/* line 19, ../scss/style.scss */
 .logout-button {
   margin-top: 10px;
 }
 
-/* line 24, ../scss/style.scss */
+/* line 23, ../scss/style.scss */
 body.modal-open .modal {
   display: flex !important;
   height: 100%;
 }
 
-/* line 29, ../scss/style.scss */
+/* line 28, ../scss/style.scss */
 body.modal-open .modal .modal-dialog {
   margin: auto;
 }
 
-/* line 33, ../scss/style.scss */
+/* line 32, ../scss/style.scss */
 .pac-container {
   z-index: 1051 !important;
 }
 
-/* line 36, ../scss/style.scss */
+/* line 35, ../scss/style.scss */
 body.modal-open .datepicker {
   z-index: 1200 !important;
 }
 
-/* line 41, ../scss/style.scss */
+/* line 40, ../scss/style.scss */
 .loader {
   position: fixed;
   left: 0px;

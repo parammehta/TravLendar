@@ -15,6 +15,7 @@
         vm.viewDate = new Date();
         vm.travelModeArray = [];
         vm.displayTravelModes = false;
+        vm.otherLocationDetails = {};
 
         //variables for work address
         vm.meetingAutocomplete = '';

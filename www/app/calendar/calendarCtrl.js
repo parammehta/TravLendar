@@ -86,7 +86,7 @@
             vm.displayTravelModes = false;
             vm.selectedTravelMode = null;
             vm.otherLocation = null;
-            vm.otherLocationDetails = null;
+            vm.otherLocationDetails = {};
             switch(vm.selectedPriorLocation){
                 case "home" :
                     vm.originPlaceId = profileService.homeLocation.place_id;

@@ -46,9 +46,14 @@
                 startsAt: moment().startOf('month').toDate()
         },
             {
-                title: 'Non-draggable event',
+                title: 'Project Meeting',
                 color: calendarConfig.colorTypes.info,
-                startsAt: moment().startOf('month').add(1, 'day').toDate()
+                startsAt: moment().startOf('month').add(16, 'day').add(8, 'hours').toDate()
+            },
+            {
+                title: 'Daily Standup',
+                color: calendarConfig.colorTypes.info,
+                startsAt: moment().startOf('month').add(16, 'day').add(12, 'hours').toDate()
             }
         ];
         

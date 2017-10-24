@@ -79,8 +79,15 @@
         function requestParameter(origins, destination, travelMode){
 
             return {
-                origins: ["place_id:"+origins],
-                destinations: ["place_id:"+destination],
+                // origins: ["place_id:"+origins],
+                // destinations: ["place_id:"+destination],
+                 origins: ["place_id:IDChIJocf0Z84FK4cRv6ECIdN9ois"],
+                 destinations: ["place_id:IDChIJkY5N-D4PK4cRQHj96Wfq-9A"],
+                 //   key: "AIzaSyBOD1obaKMooT5SVbWwukvqImOLPdQBMHE",
+                //origins: ["place_id:IDChIJocf0Z84FK4cRv6ECIdN9ois"],
+                //destinations: ["place_id:IDChIJkY5N-D4PK4cRQHj96Wfq-9A"],
+                origins : ["Seattle"],
+                destinations : ["San Fransisco"],
                 travelMode: travelMode,
                 unitSystem: google.maps.UnitSystem.IMPERIAL,
                 avoidHighways: false, avoidTolls: false
@@ -91,7 +98,8 @@
             var deferredObject = $q.defer();
             vm.originPlaceId = originPlaceId;
             vm.destinationPlaceId = destinationPlaceId;
-
+            console.log("Origin ID" + originPlaceId)
+            console.log("Destination ID" + destinationPlaceId)
             var service = new google.maps.DistanceMatrixService();
             parameter = requestParameter(vm.originPlaceId, vm.destinationPlaceId, "DRIVING")
 
@@ -100,26 +108,27 @@
                     d.reject(status);
                 } else {
                     var travelModeArray = [];
-
+                    var result = response.rows[0].elements[0]
+                    console.log("RESULT" + result)
                     travelModeArray.push({
                         mode : "DRIVING",
                         icon : "car",
-                        value : response
+                        value : result
                     });
                     travelModeArray.push({
                         mode : "WALKING",
                         icon : "male",
-                        value : response
+                        value : result
                     })
                     travelModeArray.push({
                         mode : "BICYCLING",
                         icon : "bicycle",
-                        value : response
+                        value : result
                     })
                     travelModeArray.push({
                         mode : "TRANSIT",
                         icon : "bus",
-                        value : response
+                        value : result
                     })
                     d.resolve(travelModeArray);
                 }

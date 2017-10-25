@@ -10,3 +10,4 @@ REDIRECT_URI = (STAGE == "prod") ? "https://travlendar.com" :"https://localhost:
 
 CALENDAR_API = "https://xbfmz7x8c7.execute-api.us-west-2.amazonaws.com/" + STAGE + "/calendar";
 PROFILE_API = "https://xbfmz7x8c7.execute-api.us-west-2.amazonaws.com/" + STAGE + "/profile";
+GOOGLE_API_KEY = "AIzaSyBOD1obaKMooT5SVbWwukvqImOLPdQBMHE";

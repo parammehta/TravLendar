@@ -2,7 +2,7 @@
 
 (function () {
     'use strict'
-    angular.module('travlendarApp', ['Login', 'Calendar', 'Profile', 'ui.router', 'mwl.calendar', 'ui.bootstrap', 'ngPlacesAutocomplete']);
+    angular.module('travlendarApp', ['Calendar', 'Profile', 'ui.router', 'mwl.calendar', 'ui.bootstrap', 'ngPlacesAutocomplete']);
 
     angular.module('travlendarApp').config(config);
     angular.module('travlendarApp').run(run);

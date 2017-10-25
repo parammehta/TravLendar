@@ -40,8 +40,12 @@
                 <h4 class="modal-title" id="meetingModal">Schedule Meeting</h4>
             </div>
             <div class="modal-body">
-                <label>Meeting Start:</label>
                 <div class="form-group">
+                    <label>Meeting Title:</label>
+                    <input type="text" ng-model="calendarCtrl.meetingTitle" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <label>Meeting Start:</label>
                     <div class='input-group date' id='meetingStart'>
                         <input type='text' class="form-control" />
                         <span class="input-group-addon">
@@ -59,27 +63,50 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Meeting Location</label>
+                    <label>Meeting Location:</label>
                     <input type="text" ng-places-autocomplete ng-model="calendarCtrl.meetingAutocomplete" class="form-control" details="calendarCtrl.meetingLocationDetails" initial-address="calendarCtrl.initialAddress" required />
                 </div>
-                <label>Prior Location</label>
                 <div class="form-group">
-                    <select class="form-control col-md-5" ng-model="calendarCtrl.selectedPriorLocation">
+                    <label>Previous Location:</label>
+                    <select class="form-control col-md-5" ng-model="calendarCtrl.selectedPriorLocation" ng-change="calendarCtrl.changePriorLocation()">
                         <option value="home">Home</option>
                         <option value="work">Work</option>
                         <option value="prior">Prior Meeting Location</option>
                         <option value="other">Other Location</option>
                     </select>
                 </div>
-                <div class="animate-switch-container" ng-switch on="calendarCtrl.selectedPriorLocation">
+                <div class="animate-switch-container" ng-switch on="calendarCtrl.selectedPriorLocation" style="margin-bottom: 15px">
                     <div class="animate-switch" ng-switch-when="home" ng-bind="homeLocation.formatted_address"></div>
                     <div class="animate-switch" ng-switch-when="work" ng-bind="workLocation.formatted_address"></div>
+                    <div class="animate-switch" ng-switch-when="other" class="form-group" style="margin-top: 45px">
+                        <label>Other Location:</label>
+                        <input type="text" ng-places-autocomplete ng-model="calendarCtrl.otherLocation" class="form-control" details="calendarCtrl.otherLocationDetails" initial-address="calendarCtrl.initialAddress" required />
+                    </div>
                     <div class="animate-switch" ng-switch-default>default</div>
+                </div>
+                <div class="form-group" ng-if="calendarCtrl.displayTravelModes">
+                    <label>Travel Mode:</label>
+                    <table class="travel-mode-table">
+                        <tr ng-repeat="travelMode in calendarCtrl.travelModeArray">
+                            <td><input type="radio" ng-model="calendarCtrl.selectedTravelMode" ng-value="travelMode"></td>
+                            <td><i class="fa fa-{{travelMode.icon}} travel-mode-icon"></i></td>
+                            <td>{{travelMode.mode}}</td>
+                            <td>{{travelMode.value.distance.text}}</td>
+                            <td>{{travelMode.value.duration.text}}</td>
+                        </tr>
+                    </table>
+                    <!--<div ng-repeat="travelMode in calendarCtrl.travelModeArray">
+                    <span>
+                        <input type="radio" ng-model="calendarCtrl.selectedTravelMode" ng-value="travelMode">
+                        <i class="fa fa-{{travelMode.icon}} travel-mode-icon"></i>
+                        {{travelMode.mode + " | " + travelMode.value.distance.text + " | " + travelMode.value.duration.text}}
+                      </span>
+                    </div>-->
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary" ng-click="calendarCtrl.saveMeeting()">Save changes</button>
             </div>
         </div>
     </div>

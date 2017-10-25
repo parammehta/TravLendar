@@ -13,8 +13,12 @@
             var deferredObject = $q.defer();
             var service = new google.maps.DistanceMatrixService();
             var parameter = {
-                origins: ["Seattle"], //vm.originPlaceId
-                destinations: ["San Fransisco"], //vm.destinationPlaceId
+                origins: [{
+                    placeId:vm.originPlaceId   
+                }],
+                destinations: [{
+                    placeId:vm.destinationPlaceId   
+                }],
                 travelMode: travelMode.toUpperCase(),
                 unitSystem: google.maps.UnitSystem.IMPERIAL,
                 avoidHighways: false,

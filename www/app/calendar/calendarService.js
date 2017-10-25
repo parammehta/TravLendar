@@ -1,151 +1,67 @@
-/*global angular, GOOGLE_API_KEY, $*/
+/*global angular, google, $*/
+
 (function () {
     angular.module('Calendar').service('CalendarService', CalendarService);
+
     CalendarService.$inject = ['centralAPIService', '$rootScope', '$http', '$q'];
 
     function CalendarService(centralAPIService, $rootScope, $http, $q) {
         var vm = this;
-        vm.fetchTransitDetails = fetchTransitDetails
-
-
-        /*
-        function callback2(response, status) {
-            if (status != google.maps.DistanceMatrixStatus.OK) {
-                console.log("ERROR")
-            } else {
-                if (response.rows[0].elements[0].status === "ZERO_RESULTS") {
-
-                } else {
-                    var distance = response.rows[0].elements[0].distance;
-                    var distance_value = distance.value;
-                    var distance_text = distance.text;
-                    var miles = distance_text.substring(0, distance_text.length - 3);
-                    console.log("It is " + miles + " miles from " + origin + " to " + destination);
-
-                    val1x=response.rows[0].elements[0];
-                }
-            }
-        }
-
-        function callback1(response, status) {
-           answer ="--"
-            if (status != google.maps.DistanceMatrixStatus.OK) {
-                console.log("ERROR")
-            } else {
-                if (!(response.rows[0].elements[0].status === "ZERO_RESULTS")) {
-                    var distance = response.rows[0].elements[0].distance;
-                    var distance_value = distance.value;
-                    var distance_text = distance.text;
-                    var miles = distance_text.substring(0, distance_text.length - 3);
-                    answer=distance_text
-                }
-            }
-            // dic["DRIVING"] = answer
-            // fetchTravelModeDetails2("WALKING")
-        }
-
-        function callback2(response, status) {
-            answer ="--"
-            if (status != google.maps.DistanceMatrixStatus.OK) {
-                console.log("ERROR")
-            } else {
-                if (!(response.rows[0].elements[0].status === "ZERO_RESULTS")) {
-                    var distance = response.rows[0].elements[0].distance;
-                    var distance_value = distance.value;
-                    var distance_text = distance.text;
-                    var miles = distance_text.substring(0, distance_text.length - 3);
-                    answer = distance_value
-                }
-            }
-            dic["WALKING"] = answer
-
-        }
-
-        function fetchTravelModeDetails2(travelMode) {
-            var service = new google.maps.DistanceMatrixService();
-            parameter = requestParameter(vm.originPlaceId, vm.destinationPlaceId, travelMode)
-            service.getDistanceMatrix(parameter,callback2);
-        }
-
+        vm.fetchTransitDetails = fetchTransitDetails;
 
         function fetchTravelModeDetails(travelMode) {
+            var deferredObject = $q.defer();
             var service = new google.maps.DistanceMatrixService();
-            parameter = requestParameter(vm.originPlaceId, vm.destinationPlaceId, travelMode)
-            service.getDistanceMatrix(parameter,callback1);
-        }
-    */
-
-        var d = $.Deferred();
-        function requestParameter(origins, destination, travelMode){
-
-            return {
-                // origins: ["place_id:"+origins],
-                // destinations: ["place_id:"+destination],
-                 origins: ["place_id:IDChIJocf0Z84FK4cRv6ECIdN9ois"],
-                 destinations: ["place_id:IDChIJkY5N-D4PK4cRQHj96Wfq-9A"],
-                 //   key: "AIzaSyBOD1obaKMooT5SVbWwukvqImOLPdQBMHE",
-                //origins: ["place_id:IDChIJocf0Z84FK4cRv6ECIdN9ois"],
-                //destinations: ["place_id:IDChIJkY5N-D4PK4cRQHj96Wfq-9A"],
-                origins : ["Seattle"],
-                destinations : ["San Fransisco"],
-                travelMode: travelMode,
+            var parameter = {
+                origins: ["Seattle"], //vm.originPlaceId
+                destinations: ["San Fransisco"], //vm.destinationPlaceId
+                travelMode: travelMode.toUpperCase(),
                 unitSystem: google.maps.UnitSystem.IMPERIAL,
-                avoidHighways: false, avoidTolls: false
+                avoidHighways: false,
+                avoidTolls: false
             }
+            service.getDistanceMatrix(parameter, function (response, status) {
+                if (status != google.maps.DistanceMatrixStatus.OK) {
+                    deferredObject.reject(status);
+                } else {
+                    deferredObject.resolve(response)
+                }
+            });
+            return deferredObject.promise;
         }
+
 
         function fetchTransitDetails(originPlaceId, destinationPlaceId) {
             var deferredObject = $q.defer();
             vm.originPlaceId = originPlaceId;
             vm.destinationPlaceId = destinationPlaceId;
-            console.log("Origin ID" + originPlaceId)
-            console.log("Destination ID" + destinationPlaceId)
-            var service = new google.maps.DistanceMatrixService();
-            parameter = requestParameter(vm.originPlaceId, vm.destinationPlaceId, "DRIVING")
-
-            service.getDistanceMatrix(parameter,  function(response, status){
-                if (status != google.maps.DistanceMatrixStatus.OK) {
-                    d.reject(status);
-                } else {
+            $.when(fetchTravelModeDetails("driving"), fetchTravelModeDetails("walking"), fetchTravelModeDetails("bicycling"), fetchTravelModeDetails("transit"))
+                .then(function (val1, val2, val3, val4) {
                     var travelModeArray = [];
-                    var result = response.rows[0].elements[0]
-                    console.log("RESULT" + result)
                     travelModeArray.push({
-                        mode : "DRIVING",
-                        icon : "car",
-                        value : result
+                        mode: "driving",
+                        icon: "car",
+                        value: val1.rows[0].elements[0]
                     });
                     travelModeArray.push({
-                        mode : "WALKING",
-                        icon : "male",
-                        value : result
+                        mode: "walking",
+                        icon: "male",
+                        value: val2.rows[0].elements[0]
                     })
                     travelModeArray.push({
-                        mode : "BICYCLING",
-                        icon : "bicycle",
-                        value : result
+                        mode: "bicycling",
+                        icon: "bicycle",
+                        value: val3.rows[0].elements[0]
                     })
                     travelModeArray.push({
-                        mode : "TRANSIT",
-                        icon : "bus",
-                        value : result
+                        mode: "transit",
+                        icon: "bus",
+                        value: val4.rows[0].elements[0]
                     })
-                    d.resolve(travelModeArray);
-                }
-            });
-            return d.promise();
+                    deferredObject.resolve(travelModeArray);
+                })
+                .fail(function () {})
+            return deferredObject.promise;
         }
-
-
-            // $.when(fetchTravelModeDetails("DRIVING"))
-            //     .then(function() {
-            //
-            //         deferredObject.resolve(travelModeArray);
-            //     })
-            //     .fail(function () {
-            //     })
-            //
-//            return deferredObject.promise;
-        }
-
+    }
 })();

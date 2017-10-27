@@ -10,6 +10,7 @@
         vm.fetchTransitDetails = fetchTransitDetails;
         vm.saveMeeting = saveMeeting;
         vm.fetchEvents = fetchEvents;
+        vm.deleteEvent = deleteEvent;
 
         function fetchTravelModeDetails(travelMode) {
             var deferredObject = $q.defer();
@@ -81,6 +82,16 @@
         function fetchEvents(){
             var payload = {
                 operation : "fetchEvents"
+            }
+            return centralAPIService.callAPI('events', payload, "post");
+        }
+        
+        function deleteEvent(eventID) {
+            console.log("Inside CalendarService");
+            console.log(eventID);
+            var payload = {
+                operation : "deleteEvent",
+                eventID : eventID
             }
             return centralAPIService.callAPI('events', payload, "post");
         }

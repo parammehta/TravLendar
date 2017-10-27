@@ -1,10 +1,10 @@
 /* line 1, ../scss/partials/_calendar.scss */
-.add-meeting-row {
+.add-event-row {
   margin-top: 15px;
   text-align: right;
 }
 /* line 4, ../scss/partials/_calendar.scss */
-.add-meeting-row .add-icon {
+.add-event-row .add-icon {
   margin-right: 5px;
 }
 

@@ -28,50 +28,50 @@
 <mwl-calendar view="calendarCtrl.calendarView" view-date="calendarCtrl.viewDate" events="calendarCtrl.events" view-title="calendarCtrl.calendarTitle" on-event-click="eventClicked(calendarEvent)" on-event-times-changed="calendarEvent.startsAt = calendarNewEventStart; calendarEvent.endsAt = calendarNewEventEnd" cell-is-open="true">
 </mwl-calendar>
 
-<div class="row add-meeting-row">
-    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#meetingModal" ng-click="calendarCtrl.initiateScheduleMeeting()"><i class="fa fa-plus add-icon" aria-hidden="true"></i>ADD MEETING</button>
+<div class="row add-event-row">
+    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#eventModal" ng-click="calendarCtrl.initiateScheduleEvent()"><i class="fa fa-plus add-icon" aria-hidden="true"></i>ADD MEETING</button>
 </div>
 
-<div class="modal fade" id="meetingModal" tabindex="-1" role="dialog" aria-labelledby="meetingModal">
+<div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="meetingModal">Schedule Meeting</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="calendarCtrl.closeMeetingModal()"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="eventModal">Schedule Event</h4>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>Meeting Title:</label>
-                    <input type="text" ng-model="calendarCtrl.meetingTitle" class="form-control"/>
+                    <label>Event Title:</label>
+                    <input type="text" ng-model="calendarCtrl.eventForm.eventTitle" class="form-control" />
                 </div>
                 <div class="form-group">
-                    <label>Meeting Start:</label>
-                    <div class='input-group date' id='meetingStart'>
-                        <input type='text' class="form-control" />
+                    <label>Event Start:</label>
+                    <div class='input-group date' id='eventStart'>
+                        <input type='text' class="form-control" ng-model="calendarCtrl.eventStartDate" />
                         <span class="input-group-addon">
                     <span class="glyphicon glyphicon-calendar"></span>
                         </span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Meeting End:</label>
-                    <div class='input-group date' id='meetingEnd'>
-                        <input type='text' class="form-control" />
+                    <label>Event End:</label>
+                    <div class='input-group date' id='eventEnd'>
+                        <input type='text' class="form-control" ng-model="calendarCtrl.eventEndDate"/>
                         <span class="input-group-addon">
                     <span class="glyphicon glyphicon-calendar"></span>
                         </span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Meeting Location:</label>
-                    <input type="text" ng-places-autocomplete ng-model="calendarCtrl.meetingAutocomplete" class="form-control" details="calendarCtrl.meetingLocationDetails" initial-address="calendarCtrl.initialAddress" required />
+                    <label>Event Location:</label>
+                    <input type="text" ng-places-autocomplete ng-model="calendarCtrl.eventAutocomplete" class="form-control" details="calendarCtrl.eventLocationDetails" initial-address="calendarCtrl.initialAddress" required />
                 </div>
                 <div class="form-group">
                     <label>Previous Location:</label>
                     <select class="form-control col-md-5" ng-model="calendarCtrl.selectedPriorLocation" ng-change="calendarCtrl.changePriorLocation()">
                         <option value="home">Home</option>
                         <option value="work">Work</option>
-                        <option value="prior">Prior Meeting Location</option>
+                        <option value="prior">Prior Event Location</option>
                         <option value="other">Other Location</option>
                     </select>
                 </div>
@@ -88,25 +88,18 @@
                     <label>Travel Mode:</label>
                     <table class="travel-mode-table">
                         <tr ng-repeat="travelMode in calendarCtrl.travelModeArray">
-                            <td><input type="radio" ng-model="calendarCtrl.selectedTravelMode" ng-value="travelMode"></td>
+                            <td><input type="radio" ng-model="calendarCtrl.travelMode" ng-value="travelMode"></td>
                             <td><i class="fa fa-{{travelMode.icon}} travel-mode-icon"></i></td>
                             <td>{{travelMode.mode}}</td>
                             <td>{{travelMode.value.distance.text}}</td>
                             <td>{{travelMode.value.duration.text}}</td>
                         </tr>
                     </table>
-                    <!--<div ng-repeat="travelMode in calendarCtrl.travelModeArray">
-                    <span>
-                        <input type="radio" ng-model="calendarCtrl.selectedTravelMode" ng-value="travelMode">
-                        <i class="fa fa-{{travelMode.icon}} travel-mode-icon"></i>
-                        {{travelMode.mode + " | " + travelMode.value.distance.text + " | " + travelMode.value.duration.text}}
-                      </span>
-                    </div>-->
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" ng-click="calendarCtrl.saveMeeting()">Save changes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="calendarCtrl.closeMeetingModal()">Close</button>
+                <button type="button" class="btn btn-primary" ng-click="calendarCtrl.saveEvent()">Save changes</button>
             </div>
         </div>
     </div>

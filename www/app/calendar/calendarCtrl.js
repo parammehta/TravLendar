@@ -1,4 +1,4 @@
-/*global angular, moment, $*/
+/*global angular, $*/
 
 (function () {
     'use strict';
@@ -9,99 +9,148 @@
 
     function CalendarCtrl(CalendarService, calendarConfig, profileService, $scope) {
         var vm = this;
-        vm.Users = [];
+        vm.events = [];
         vm.calendarView = "month";
-        vm.selectedPriorLocation = "home";
         vm.viewDate = new Date();
-        vm.travelModeArray = [];
-        vm.displayTravelModes = false;
-        vm.otherLocationDetails = {};
+        vm.eventLocationDetails = {};
+        vm.travelMode = null;
+        vm.initialAddress = profileService.currentUserLocation || profileService.getCurrentUserLocation();
 
-        //variables for work address
-        vm.meetingAutocomplete = '';
-        vm.meetingLocationDetails = {};
-        vm.initialAddress = profileService.currentUserLocation ? profileService.currentUserLocation : profileService.getCurrentUserLocation();
-        
         vm.changePriorLocation = changePriorLocation;
+        vm.closeMeetingModal = closeMeetingModal;
+        vm.saveEvent = saveEvent;
 
-        $('#meetingStart').datetimepicker({
-            allowInputToggle: true,
-            sideBySide: true
-        });
-        $('#meetingEnd').datetimepicker({
-            useCurrent: false,
-            allowInputToggle: true,
-            sideBySide: true
-        });
-        $("#meetingStart").on("dp.change", function (e) {
-            $('#meetingEnd').data("DateTimePicker").minDate(e.date);
-        });
-        $("#meetingEnd").on("dp.change", function (e) {
-            $('#meetingStart').data("DateTimePicker").maxDate(e.date);
-        });
+        init();
 
-        vm.events = [{
-                title: 'Draggable event',
-                color: calendarConfig.colorTypes.warning,
-                startsAt: moment().startOf('month').toDate()
-        },
-            {
-                title: 'Project Meeting',
-                color: calendarConfig.colorTypes.info,
-                startsAt: moment().startOf('month').add(16, 'day').add(8, 'hours').toDate()
-            },
-            {
-                title: 'Daily Standup',
-                color: calendarConfig.colorTypes.info,
-                startsAt: moment().startOf('month').add(16, 'day').add(12, 'hours').toDate()
-            }
-        ];
-        
-        function changeLocation(){
-            vm.displayTravelModes = false;
-            vm.selectedTravelMode = null;
-            if(!vm.originPlaceId){
-                vm.originPlaceId = profileService.homeLocation.place_id;
-            }
-            CalendarService.fetchTransitDetails(vm.originPlaceId, vm.destinationPlaceId).then(function(data){
-                vm.travelModeArray = data;
-                vm.displayTravelModes = true;
+        function init() {
+            $('#eventStart').datetimepicker({
+                allowInputToggle: true,
+                sideBySide: true
+            });
+            $('#eventEnd').datetimepicker({
+                useCurrent: false,
+                allowInputToggle: true,
+                sideBySide: true
+            });
+            $("#eventStart").on("dp.change", function (e) {
+                $('#eventEnd').data("DateTimePicker").minDate(e.date);
+                vm.eventForm.eventStart = new Date(e.date).getTime();
+                vm.eventStartDate = e.date.format('MM/DD/YYYY h:mm A');
+            });
+            $("#eventEnd").on("dp.change", function (e) {
+                $('#eventStart').data("DateTimePicker").maxDate(e.date);
+                vm.eventForm.eventEnd = new Date(e.date).getTime();
+                vm.eventEndDate = e.date.format('MM/DD/YYYY h:mm A');
+            });
+            initEventModal();
+            CalendarService.fetchEvents().then(function (data) {
+                var eventList = data.data.Items;
+                for (var i = 0; i < eventList.length; i++) {
+                    vm.events.push({
+                        id: eventList[i].id,
+                        title: eventList[i].eventTitle,
+                        color: calendarConfig.colorTypes.info,
+                        startsAt: new Date(eventList[i].eventStart),
+                        endsAt: new Date(eventList[i].eventEnd)
+                    });
+                }
             })
         }
 
+        function initEventModal() {
+            vm.selectedPriorLocation = "home";
+            vm.travelModeArray = [];
+            vm.otherLocationDetails = {};
+            vm.destinationPlaceId = null;
+            vm.originPlaceId = null;
+            vm.eventStartDate = '';
+            vm.eventEndDate = '';
+            vm.displayTravelModes = false;
+            vm.eventAutocomplete = '';
+            vm.otherLocation = '';
+            vm.eventForm = {
+                eventTitle: "",
+                eventStart: null,
+                eventEnd: null
+            };
+            $('#eventStart').data("DateTimePicker").maxDate(false);
+            $('#eventStart').data("DateTimePicker").useCurrent(true);
+            $('#eventEnd').data("DateTimePicker").minDate(false);
+        }
+
+        function closeMeetingModal() {
+            $("#eventModal").modal('hide');
+            initEventModal();
+        }
+
+
+
+        function changeLocation() {
+            vm.displayTravelModes = false;
+            vm.travelMode = null;
+            if (!vm.originPlaceId) {
+                vm.originPlaceId = profileService.homeLocation.place_id;
+            }
+            CalendarService.fetchTransitDetails(vm.originPlaceId, vm.destinationPlaceId).then(function (data) {
+                vm.travelModeArray = data;
+                vm.displayTravelModes = true;
+            });
+        }
+
         $scope.$watch(function () {
-            return vm.meetingLocationDetails.place_id;
+            return vm.eventLocationDetails.place_id;
         }, function (newValue) {
-            if(newValue){
+            if (newValue) {
                 vm.destinationPlaceId = newValue;
-                changeLocation();  
+                changeLocation();
             }
         });
-        
+
         $scope.$watch(function () {
             return vm.otherLocationDetails.place_id;
         }, function (newValue) {
-            if(newValue){
+            if (newValue) {
                 vm.originPlaceId = newValue;
-                changeLocation();  
+                changeLocation();
             }
         });
-        
-        function changePriorLocation(){
+
+        function changePriorLocation() {
             vm.displayTravelModes = false;
-            vm.selectedTravelMode = null;
+            vm.travelMode = null;
             vm.otherLocation = null;
             vm.otherLocationDetails = {};
-            switch(vm.selectedPriorLocation){
-                case "home" :
+            switch (vm.selectedPriorLocation) {
+                case "home":
                     vm.originPlaceId = profileService.homeLocation.place_id;
                     changeLocation();
                     break;
-                case "work" :
+                case "work":
                     vm.originPlaceId = profileService.workLocation.place_id;
                     changeLocation();
-                    break;     
+                    break;
             }
+        }
+
+        function saveEvent() {
+            vm.eventForm.originPlaceId = vm.originPlaceId;
+            vm.eventForm.destinationPlaceId = vm.destinationPlaceId;
+            vm.eventForm.travelMode = {
+                mode: vm.travelMode.mode,
+                distance: vm.travelMode.value.distance,
+                time: vm.travelMode.value.duration
+            };
+            CalendarService.saveMeeting(vm.eventForm).then(function (data) {
+                var id = data.data;
+                vm.events.push({
+                    id: id,
+                    title: vm.eventForm.eventTitle,
+                    color: calendarConfig.colorTypes.info,
+                    startsAt: new Date(vm.eventForm.eventStart),
+                    endsAt: new Date(vm.eventForm.eventEnd)
+                });
+                closeMeetingModal();
+            });
         }
     }
 })();

@@ -1,4 +1,4 @@
-/*global angular, CALENDAR_API, PROFILE_API*/
+/*global angular, CALENDAR_API, PROFILE_API, EVENTS_API*/
 
 (function () {
     'use strict';
@@ -21,19 +21,22 @@
                 case "profile":
                     url = PROFILE_API;
                     break;
+                case "events":
+                    url = EVENTS_API;
+                    break;
                 default:
                     url = CALENDAR_API;
             }
-            
-            $http[method](url, payload).then(function(response){
+
+            $http[method](url, payload).then(function (response) {
                 $rootScope.displayLoader = false;
                 deferredObject.resolve(response);
-            }, function(response){
-                if (response.status === 401 && response.data.message === "Identity token has expired") {
-                    authService.refresh().then(function () {
-                        callAPI(module, payload, method, deferredObject);
-                    });
-                }
+            }, function (response) {
+                authService.refresh().then(function () {
+                    callAPI(module, payload, method, deferredObject);
+                }, function (response) {
+                    window.location.replace(AUTH_URL + REDIRECT_URI + "&response_type=code");
+                });
                 $rootScope.displayLoader = false;
             })
             return deferredObject.promise;

@@ -8,6 +8,8 @@
     function CalendarService(centralAPIService, $rootScope, $http, $q) {
         var vm = this;
         vm.fetchTransitDetails = fetchTransitDetails;
+        vm.saveMeeting = saveMeeting;
+        vm.fetchEvents = fetchEvents;
 
         function fetchTravelModeDetails(travelMode) {
             var deferredObject = $q.defer();
@@ -66,6 +68,21 @@
                 })
                 .fail(function () {})
             return deferredObject.promise;
+        }
+        
+        function saveMeeting(eventDetails){
+            var payload = {
+                operation : "saveEvent",
+                eventDetails : eventDetails
+            }
+            return centralAPIService.callAPI('events', payload, "post");
+        }
+        
+        function fetchEvents(){
+            var payload = {
+                operation : "fetchEvents"
+            }
+            return centralAPIService.callAPI('events', payload, "post");
         }
     }
 })();

@@ -19,7 +19,20 @@
         vm.changePriorLocation = changePriorLocation;
         vm.closeMeetingModal = closeMeetingModal;
         vm.saveEvent = saveEvent;
-
+        vm.eventAction = [{
+            label: '<i class=\'glyphicon glyphicon-trash\'></i>',
+            onClick: function(args) {
+                var bool = confirm("Are you sure you want to delete event: " + args.calendarEvent.title);
+                if (bool == true) {
+                    console.log("Delete Event");
+                    deleteEvent(args);
+                }
+                else {
+                    console.log("Do not delete event");
+                }
+            }
+        }];
+       
         init();
 
         function init() {
@@ -51,7 +64,8 @@
                         title: eventList[i].eventTitle,
                         color: calendarConfig.colorTypes.info,
                         startsAt: new Date(eventList[i].eventStart),
-                        endsAt: new Date(eventList[i].eventEnd)
+                        endsAt: new Date(eventList[i].eventEnd),
+                        actions: vm.eventAction
                     });
                 }
             })
@@ -147,10 +161,25 @@
                     title: vm.eventForm.eventTitle,
                     color: calendarConfig.colorTypes.info,
                     startsAt: new Date(vm.eventForm.eventStart),
-                    endsAt: new Date(vm.eventForm.eventEnd)
+                    endsAt: new Date(vm.eventForm.eventEnd),
+                    actions: vm.eventAction
                 });
                 closeMeetingModal();
             });
         }
+        
+        function deleteEvent(args) {
+            console.log("Event will be deleted: " + args.calendarEvent.title);
+            var event_id = args.calendarEvent.id;
+            console.log(event_id);
+            CalendarService.deleteEvent(event_id).then(function (data) {
+                for(var i=0; i<vm.events.length; i++){
+                    if (vm.events[i].id === event_id) {
+                        vm.events.splice(i, 1);
+                        break;
+                    }
+                }
+            });   
+        }        
     }
 })();

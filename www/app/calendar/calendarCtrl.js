@@ -173,11 +173,13 @@
             var event_id = args.calendarEvent.id;
             console.log(event_id);
             CalendarService.deleteEvent(event_id).then(function (data) {
-                alert("Event Deleted");
-                
-            });
-            
-        }
-        
+                for(var i=0; i<vm.events.length; i++){
+                    if (vm.events[i].id === event_id) {
+                        vm.events.splice(i, 1);
+                        break;
+                    }
+                }
+            });   
+        }        
     }
 })();

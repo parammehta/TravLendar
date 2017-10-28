@@ -40,6 +40,7 @@ function isConflictPresent(data){
         var itemList = data.Items
         var isMeetingOverlaps = false
 
+
         for (var i = 0; i < itemList.length; i++) {
 
              var item_start_time = itemList[i]["eventStart"];
@@ -47,19 +48,18 @@ function isConflictPresent(data){
              console.log(item_start_time);
              console.log(item_end_time);
 
-             eventStart = eventStart + 1;
-             eventEnd = eventEnd - 1;
+             //Below
+             var min = Math.min(eventStart, item_start_time)
+             var max = Math.max(eventEnd, item_end_time)
 
-             if((item_start_time <= eventStart) && (item_end_time >= eventEnd)){
+             if((max - min) < ((eventEnd - eventStart)  + (item_end_time - item_start_time))){
                 //context.fail();
                 isMeetingOverlaps = true
                 break;
              }
        }
-
         return isMeetingOverlaps
 }
-
 
 
 docClient.query(params, function(err, data) {

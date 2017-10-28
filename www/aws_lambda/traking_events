@@ -1,0 +1,146 @@
+var aws = require('aws-sdk');
+const doc = require("dynamodb-doc");
+const dynamo = new doc.DynamoDB();
+
+var lambda = new aws.Lambda({
+    region: 'us-west-2'
+});
+var username = "";
+
+exports.handler = (event, context, callback) => {
+    function saveEvent() {
+        var id = new Date().getTime() + "_" + username
+        var payload = {
+            TableName: "user_events",
+            Item: {
+                "id": id,
+                "username" : username,
+                "eventStart": event.body.eventDetails.eventStart,
+                "eventEnd": event.body.eventDetails.eventEnd,
+                "eventTitle": event.body.eventDetails.eventTitle,
+                "origin": event.body.eventDetails.originPlaceId,
+                "destination": event.body.eventDetails.destinationPlaceId,
+                "travelMode": event.body.eventDetails.travelMode
+            }
+        }
+
+        dynamo.putItem(payload, function (err, data) {
+            if (err) {
+                context.fail(err);
+            } else {
+                context.succeed(id);
+            }
+        });
+    }
+
+    function fetchEvents(){
+        var payload = {
+            TableName: "user_events",
+            IndexName: "username-index",
+            KeyConditionExpression: "username = :u",
+            ExpressionAttributeValues: {
+                ":u": username
+            }
+        };
+        dynamo.query(payload, function(err, data){
+            if(err){
+                context.fail(err);
+            } else {
+                context.succeed(data);
+            }
+        })
+    }
+
+
+     function isConflictPresent(data, eventStart, eventEnd){
+         console.log(data)
+        var itemList = data.Items
+        var isMeetingOverlaps = false
+
+        for (var i = 0; i < itemList.length; i++) {
+             var item_start_time = itemList[i].eventStart;
+             var item_end_time = itemList[i].eventEnd;
+             console.log(item_start_time);
+             console.log(item_end_time);
+
+             var min = Math.min(eventStart, item_start_time)
+             var max = Math.max(eventEnd, item_end_time)
+             if((max - min) < ((eventEnd - eventStart)  + (item_end_time - item_start_time))){
+                //context.fail();
+                isMeetingOverlaps = true
+                break;
+             }
+       }
+        return isMeetingOverlaps
+    }
+
+    function queryForFetchingNearMeetings(){
+        console.log("Inside the queryForFetchingNearMeetings method ")
+        var tableName = "user_events";
+        var eventStart = event.body.eventDetails.eventStart;
+        var eventEnd = event.body.eventDetails.eventEnd;
+        console.log(eventStart)
+        console.log(eventEnd)
+        console.log(username)
+      //var username = username;
+        var cal_eventStart = Number(eventStart) - 86400000; //24*60*60*1000
+        var cal_eventEnd = Number(eventEnd) + 86400000; //24*60*60*1000
+        var params = {
+            TableName: tableName,
+            IndexName: "username-index",
+            KeyConditionExpression:
+                "#username = :u",
+            ProjectionExpression: "eventStart, eventEnd",
+            FilterExpression : "eventStart >= :start and eventStart <= :end",
+            ExpressionAttributeNames:{
+                    "#username": "username"
+                 },
+            ExpressionAttributeValues: {
+                ":u": username,
+                ":start":cal_eventStart,
+                ":end":cal_eventEnd
+            }
+        };
+
+        dynamo.query(params, function(err, data) {
+            if (err) {
+                console.log(err);
+                context.fail(err);
+            } else {
+                console.log(data);
+                if(isConflictPresent(data,eventStart,eventEnd)){
+                    console.log("Conflict Present");
+                    context.fail("Conflict is present");
+                }else{
+                    console.log("Conflict Not Present");
+                    saveEvent();
+                   // context.succeed("No Conflict Found")
+                }
+            }});
+        }
+
+
+    lambda.invoke({
+        FunctionName: 'getUsername',
+        Payload: JSON.stringify({
+            idToken: event.idToken
+        }, null, 2)
+    }, function (error, data) {
+        if (error) {
+            context.fail('error', error);
+        }
+        if (data.Payload) {
+            username = data.Payload.replace(/['"]+/g, '');
+            switch (event.body.operation) {
+                case "saveEvent":
+                    queryForFetchingNearMeetings();
+                    break;
+                case "fetchEvents":
+                    fetchEvents();
+                    break;
+                default:
+                    context.fail("Invalid Operation");
+            }
+        }
+    });
+};

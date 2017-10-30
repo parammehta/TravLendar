@@ -1,0 +1,78 @@
+'use strict';
+
+exports.handler = function index(event, context, callback) {
+
+   var AWS = require("aws-sdk");
+
+AWS.config.update({
+  region: "us-west-2"
+});
+
+var docClient = new AWS.DynamoDB.DocumentClient();
+
+var table = "user_events";
+var eventStart = 1509218774002;
+var eventEnd = 1509215114002;
+var username = 'melroyd16';
+var cal_eventStart = eventStart - 86400000; //24*60*60*1000
+var cal_eventEnd = eventEnd + 86400000; //24*60*60*1000
+
+var params = {
+            TableName: "user_events",
+            IndexName: "username-index",
+            KeyConditionExpression:
+                "#username = :u",
+            ProjectionExpression: "eventStart, eventEnd",
+
+            FilterExpression : "eventStart >= :start and eventStart <= :end",
+            ExpressionAttributeNames:{
+                    "#username": "username"
+                 },
+            ExpressionAttributeValues: {
+                ":u": username,
+                ':start':cal_eventStart,
+                ':end':cal_eventEnd
+            }
+        };
+
+
+function isConflictPresent(data){
+        var itemList = data.Items
+        var isMeetingOverlaps = false
+
+
+        for (var i = 0; i < itemList.length; i++) {
+
+             var item_start_time = itemList[i]["eventStart"];
+             var item_end_time = itemList[i]["eventEnd"];
+             console.log(item_start_time);
+             console.log(item_end_time);
+
+             //Below
+             var min = Math.min(eventStart, item_start_time)
+             var max = Math.max(eventEnd, item_end_time)
+
+             if((max - min) < ((eventEnd - eventStart)  + (item_end_time - item_start_time))){
+                //context.fail();
+                isMeetingOverlaps = true
+                break;
+             }
+       }
+        return isMeetingOverlaps
+}
+
+
+docClient.query(params, function(err, data) {
+    if (err) {
+        console.log(err);
+        context.fail(err);
+    } else {
+        console.log(data)
+        if(isConflictPresent(data)){
+            context.fail("Conflict is present")
+        }else{
+            context.succeed("No Conflict Found")
+        }
+    }
+});
+};

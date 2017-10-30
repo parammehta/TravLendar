@@ -23,12 +23,8 @@
             label: '<i class=\'glyphicon glyphicon-trash\'></i>',
             onClick: function(args) {
                 var bool = confirm("Are you sure you want to delete event: " + args.calendarEvent.title);
-                if (bool == true) {
-                    console.log("Delete Event");
+                if (bool) {
                     deleteEvent(args);
-                }
-                else {
-                    console.log("Do not delete event");
                 }
             }
         }];
@@ -172,9 +168,7 @@
         }
         
         function deleteEvent(args) {
-            console.log("Event will be deleted: " + args.calendarEvent.title);
             var event_id = args.calendarEvent.id;
-            console.log(event_id);
             CalendarService.deleteEvent(event_id).then(function (data) {
                 for(var i=0; i<vm.events.length; i++){
                     if (vm.events[i].id === event_id) {

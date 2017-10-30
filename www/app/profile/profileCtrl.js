@@ -40,7 +40,6 @@
             
             //variable for lunch time
             vm.lunchTime= profileService.lunchTime;
-            console.log(new Date(vm.lunchTime).toString().split(' ')[4]);
             
             //variable for walkingDistance
             vm.walkingDistance= profileService.walkingDistance;

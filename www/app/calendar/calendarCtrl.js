@@ -7,7 +7,7 @@
 
     CalendarCtrl.$inject = ['CalendarService', 'calendarConfig', 'profileService', '$scope'];
 
-    function CalendarCtrl(CalendarService, calendarConfig, profileService, $scope) {
+    function CalendarCtrl(CalendarService, calendarConfig, profileService, $scope, moment) {
         var vm = this;
         vm.events = [];
         vm.calendarView = "month";
@@ -25,8 +25,9 @@
         function init() {
             $('#eventStart').datetimepicker({
                 allowInputToggle: true,
-                sideBySide: true
+                sideBySide: true        
             });
+            
             $('#eventEnd').datetimepicker({
                 useCurrent: false,
                 allowInputToggle: true,
@@ -42,7 +43,9 @@
                 vm.eventForm.eventEnd = new Date(e.date).getTime();
                 vm.eventEndDate = e.date.format('MM/DD/YYYY h:mm A');
             });
+            
             initEventModal();
+            
             CalendarService.fetchEvents().then(function (data) {
                 var eventList = data.data.Items;
                 for (var i = 0; i < eventList.length; i++) {
@@ -147,7 +150,7 @@
                     title: vm.eventForm.eventTitle,
                     color: calendarConfig.colorTypes.info,
                     startsAt: new Date(vm.eventForm.eventStart),
-                    endsAt: new Date(vm.eventForm.eventEnd)
+                    endsAt: new Date(vm.eventForm.eventEnd),
                 });
                 closeMeetingModal();
             });

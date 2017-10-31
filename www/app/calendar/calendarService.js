@@ -87,8 +87,6 @@
         }
         
         function deleteEvent(eventID) {
-            console.log("Inside CalendarService");
-            console.log(eventID);
             var payload = {
                 operation : "deleteEvent",
                 eventID : eventID

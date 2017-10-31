@@ -19,7 +19,8 @@
     "font-awesome": "^4.7.0",
     "ng-autocomplete-places": "^2.0.0",
     "eonasdan-bootstrap-datetimepicker": "^4.17.47",
-    "bootstrap-select": "^1.12.4"
+    "bootstrap-select": "^1.12.4",
+    "angularjs-slider": "^6.4.0"
   },
   "resolutions": {
     "bootstrap": "^3.3.4"

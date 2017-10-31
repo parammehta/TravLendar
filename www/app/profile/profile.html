@@ -25,11 +25,10 @@
     
     <div class="form-group">
         <label>Preferred Walkiing Distance</label>
-        <input type="number" min=0 ng-model="profileCtrl.walkingDistance" details="profileCtrl.walkingDetails" />
-        miles
+            <br/>
+            <rzslider rz-slider-model="profileCtrl.walkingDistance" rz-slider-options="profileCtrl.slider.options"></rzslider>
         <br/>
     </div>
-    <br/>
-    
-    <button ng-click="profileCtrl.saveUserLocation()" class="btn btn-primary" ng-disabled="profileForm.$pristine">Save</button>
+
+    <button ng-click="profileCtrl.saveUserLocation()" class="btn btn-primary">Save</button>
 </form>

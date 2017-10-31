@@ -7,7 +7,7 @@
 
     CalendarCtrl.$inject = ['CalendarService', 'calendarConfig', 'profileService', '$scope'];
 
-    function CalendarCtrl(CalendarService, calendarConfig, profileService, $scope, moment) {
+    function CalendarCtrl(CalendarService, calendarConfig, profileService, $scope) {
         var vm = this;
         vm.events = [];
         vm.calendarView = "month";
@@ -36,6 +36,7 @@
         init();
 
         function init() {
+            
             $('#eventStart').datetimepicker({
                 allowInputToggle: true,
                 sideBySide: true        
@@ -47,6 +48,7 @@
                 sideBySide: true
             });
             $("#eventStart").on("dp.change", function (e) {
+                $('#eventStart').data("DateTimePicker").minDate(moment());
                 $('#eventEnd').data("DateTimePicker").minDate(e.date);
                 vm.eventForm.eventStart = new Date(e.date).getTime();
                 vm.eventStartDate = e.date.format('MM/DD/YYYY h:mm A');

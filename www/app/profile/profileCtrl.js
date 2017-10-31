@@ -5,13 +5,21 @@
     angular.module('Profile', []);
     angular.module('Profile').controller('ProfileCtrl', ProfileCtrl);
     
-    ProfileCtrl.$inject = ['profileService', '$timeout'];
+    ProfileCtrl.$inject = ['profileService', '$timeout', '$scope'];
+    
 
     function ProfileCtrl(profileService, $timeout) {
         var vm = this;
         vm.displaySuccess = false;
         vm.saveUserLocation = saveUserLocation;
-
+        vm.value=10;
+        vm.slider={
+            options: {
+            floor: 0,
+            ceil: 100,
+            step: 1
+        }
+        }
         
         if (!profileService.homeLocation) {
             profileService.fetchUserLocations().then(function (data) {

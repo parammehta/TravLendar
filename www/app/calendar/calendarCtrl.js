@@ -1,43 +1,60 @@
-/*global angular, $*/
+/*global angular, $, moment*/
 
 (function () {
     'use strict';
     angular.module('Calendar', []);
     angular.module('Calendar').controller('CalendarCtrl', CalendarCtrl);
 
-    CalendarCtrl.$inject = ['CalendarService', 'calendarConfig', 'profileService', '$scope'];
+    CalendarCtrl.$inject = ['CalendarService', 'calendarConfig', 'profileService', '$scope', '$timeout'];
 
-    function CalendarCtrl(CalendarService, calendarConfig, profileService, $scope) {
+    function CalendarCtrl(CalendarService, calendarConfig, profileService, $scope, $timeout) {
         var vm = this;
         vm.events = [];
         vm.calendarView = "month";
         vm.viewDate = new Date();
         vm.eventLocationDetails = {};
         vm.travelMode = null;
+        vm.displayDeleteModal = false;
+        vm.displaySuccess = false;
         vm.initialAddress = profileService.currentUserLocation || profileService.getCurrentUserLocation();
 
         vm.changePriorLocation = changePriorLocation;
         vm.closeMeetingModal = closeMeetingModal;
+        vm.closeDeleteModal = closeDeleteModal;
         vm.saveEvent = saveEvent;
-        vm.eventAction = [{
-            label: '<i class=\'glyphicon glyphicon-trash\'></i>',
-            onClick: function(args) {
-                var bool = confirm("Are you sure you want to delete event: " + args.calendarEvent.title);
-                if (bool) {
-                    deleteEvent(args);
+        vm.deleteEvent = deleteEvent;
+        vm.eventAction = [
+            {
+                label: '<i class=\'glyphicon glyphicon-pencil event-icon\' title="Delete"></i>'
+            },{
+                label: '<i class=\'glyphicon glyphicon-trash event-icon\' title="Delete"></i>',
+                onClick: function (args) {
+                    vm.displayDeleteModal = true;
+
+                    $timeout(function () {
+                        $("#modal2").modal('show');
+                    }, 100);
+
+                    vm.currentEventId = args.calendarEvent.id;
                 }
-            }
         }];
-       
+
+        function closeDeleteModal() {
+            $("#modal2").modal('hide');
+            $timeout(function () {
+                vm.displayDeleteModal = false;
+            }, 1000);
+        }
+
         init();
 
         function init() {
-            
+
             $('#eventStart').datetimepicker({
                 allowInputToggle: true,
-                sideBySide: true        
+                sideBySide: true
             });
-            
+
             $('#eventEnd').datetimepicker({
                 useCurrent: false,
                 allowInputToggle: true,
@@ -54,9 +71,9 @@
                 vm.eventForm.eventEnd = new Date(e.date).getTime();
                 vm.eventEndDate = e.date.format('MM/DD/YYYY h:mm A');
             });
-            
+
             initEventModal();
-            
+
             CalendarService.fetchEvents().then(function (data) {
                 var eventList = data.data.Items;
                 for (var i = 0; i < eventList.length; i++) {
@@ -168,17 +185,24 @@
                 closeMeetingModal();
             });
         }
-        
-        function deleteEvent(args) {
-            var event_id = args.calendarEvent.id;
-            CalendarService.deleteEvent(event_id).then(function (data) {
-                for(var i=0; i<vm.events.length; i++){
-                    if (vm.events[i].id === event_id) {
-                        vm.events.splice(i, 1);
-                        break;
+
+        function deleteEvent() {
+            CalendarService.deleteEvent(vm.currentEventId).then(function (data) {
+                if (!data.data.errorMessage) {
+                    for (var i = 0; i < vm.events.length; i++) {
+                        if (vm.events[i].id === vm.currentEventId) {
+                            vm.events.splice(i, 1);
+                            vm.successMessage = "Event has been successfully deleted";
+                            vm.displaySuccess = true;
+                            closeDeleteModal();
+                            $timeout(function () {
+                                vm.displaySuccess = false;
+                            }, 3000)
+                            break;
+                        }
                     }
                 }
-            });   
-        }        
+            });
+        }
     }
 })();

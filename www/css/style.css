@@ -20,53 +20,70 @@
   text-align: center;
 }
 
+/* line 20, ../scss/partials/_calendar.scss */
+.calendar-menu-row {
+  margin-bottom: 20px;
+}
+
 /* line 3, ../scss/style.scss */
+html,
+body {
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  background-color: #f2f2f3;
+}
+
+/* line 11, ../scss/style.scss */
 #logo {
   width: 200px;
 }
 
-/* line 7, ../scss/style.scss */
+/* line 15, ../scss/style.scss */
 .nav-link {
   font-size: 25px;
   color: #3939ac;
 }
-/* line 8, ../scss/style.scss */
+/* line 16, ../scss/style.scss */
 .nav-link i {
   margin-right: 10px;
 }
 
-/* line 15, ../scss/style.scss */
+/* line 23, ../scss/style.scss */
 .main-view {
-  padding: 10px 20px;
+  margin: -20px 6%;
+  min-height: 100%;
+  background-color: white;
+  padding: 40px;
 }
 
-/* line 19, ../scss/style.scss */
+/* line 30, ../scss/style.scss */
 .logout-button {
   margin-top: 10px;
 }
 
-/* line 23, ../scss/style.scss */
+/* line 34, ../scss/style.scss */
 body.modal-open .modal {
   display: flex !important;
   height: 100%;
 }
 
-/* line 28, ../scss/style.scss */
+/* line 39, ../scss/style.scss */
 body.modal-open .modal .modal-dialog {
   margin: auto;
 }
 
-/* line 32, ../scss/style.scss */
+/* line 43, ../scss/style.scss */
 .pac-container {
   z-index: 1051 !important;
 }
 
-/* line 35, ../scss/style.scss */
+/* line 47, ../scss/style.scss */
 body.modal-open .datepicker {
   z-index: 1200 !important;
 }
 
-/* line 40, ../scss/style.scss */
+/* line 52, ../scss/style.scss */
 .loader {
   position: fixed;
   left: 0px;
@@ -75,4 +92,26 @@ body.modal-open .datepicker {
   height: 100%;
   z-index: 9999;
   background: url("../images/loader.gif") 50% 50% no-repeat;
+}
+
+/* line 62, ../scss/style.scss */
+mwl-calendar .cal-slide-content {
+  background-color: aliceblue;
+  box-shadow: none;
+}
+/* line 65, ../scss/style.scss */
+mwl-calendar .cal-slide-content a.event-item {
+  color: #337ab7;
+}
+
+/* line 70, ../scss/style.scss */
+.event-icon {
+  margin: 0px 5px;
+  transition: all .2s ease-in-out;
+}
+
+/* line 75, ../scss/style.scss */
+.event-icon:hover {
+  transform: scale(1.8);
+  color: green;
 }

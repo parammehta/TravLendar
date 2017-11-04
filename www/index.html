@@ -16,63 +16,57 @@
 </head>
 
 <body ng-app="travlendarApp" ng-controller="MainCtrl as mainCtrl">
-    <div ng-if="mainCtrl.isUserAuthenticated">
-        <div class="loader" ng-if="displayLoader"></div>
-        <nav class="navbar navbar-default">
-            <div class="container-fluid">
-                <!-- Brand and toggle get grouped for better mobile display -->
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+    <div class="loader" ng-if="displayLoader"></div>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                         <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#"><img id="logo" src="images/logotext.png" /></a>
-                </div>
-
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav">
-                        <li><a class="nav-link" ui-sref="profile"><i class="fa fa-user"></i>Profile</a></li>
-                        <li><a class="nav-link" href="#"><i class="fa fa-cog"></i>Settings</a></li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <form class="form-inline my-2 my-lg-0">
-                            <button class="btn btn-warning logout-button" type="submit" ng-click="mainCtrl.logout()">Logout</button>
-                        </form>
-                    </ul>
-                </div>
+                <a class="navbar-brand" href="#"><img id="logo" src="images/logotext.png" /></a>
             </div>
-        </nav>
-        <div data-ui-view class="main-view"></div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a class="nav-link" ui-sref="profile"><i class="fa fa-user"></i>Profile</a></li>
+                    <li><a class="nav-link" href="#"><i class="fa fa-cog"></i>Settings</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <form class="form-inline my-2 my-lg-0">
+                        <button class="btn btn-warning logout-button" type="submit" ng-click="mainCtrl.logout()">Logout</button>
+                    </form>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div data-ui-view class="main-view"></div>
 
 
-        <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="locationModal" data-backdrop="static" data-keyboard="false" ng-if="mainCtrl.displayLocationModal">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="myModalLabel">Select Address's</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form name="userLocationForm" novalidate>
-                            <div class="form-group">
-                                <label>Home Address</label>
-                                <input type="text" ng-places-autocomplete ng-model="mainCtrl.homeAutocomplete" class="form-control" details="mainCtrl.homeDetails" initial-address="mainCtrl.initialAddress" required />
-                            </div>
-                            <div class="form-group">
-                                <label>Work Address</label>
-                                <input type="text" ng-places-autocomplete ng-model="mainCtrl.workAutocomplete" class="form-control" details="mainCtrl.workDetails" initial-address="mainCtrl.initialAddress" />
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" ng-click="mainCtrl.saveUserLocation()" ng-disabled="userLocationForm.$invalid">Save changes</button>
-                    </div>
+    <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="locationModal" data-backdrop="static" data-keyboard="false" ng-if="mainCtrl.displayLocationModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Select Address's</h4>
+                </div>
+                <div class="modal-body">
+                    <form name="userLocationForm" novalidate>
+                        <div class="form-group">
+                            <label>Home Address</label>
+                            <input type="text" ng-places-autocomplete ng-model="mainCtrl.homeAutocomplete" class="form-control" details="mainCtrl.homeDetails" initial-address="mainCtrl.initialAddress" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Work Address</label>
+                            <input type="text" ng-places-autocomplete ng-model="mainCtrl.workAutocomplete" class="form-control" details="mainCtrl.workDetails" initial-address="mainCtrl.initialAddress" />
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" ng-click="mainCtrl.saveUserLocation()" ng-disabled="userLocationForm.$invalid">Save changes</button>
                 </div>
             </div>
         </div>
-
     </div>
 
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
@@ -91,7 +85,7 @@
     <script src="https://unpkg.com/angular-bootstrap-colorpicker@3"></script>
     <script src="https://unpkg.com/angular-bootstrap-calendar"></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOD1obaKMooT5SVbWwukvqImOLPdQBMHE&libraries=places"></script>
-    
+
 
     <script src="js/constants.js"></script>
     <script src="app/app.js"></script>

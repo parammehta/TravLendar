@@ -37,7 +37,7 @@
     <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#eventModal"><i class="fa fa-plus add-icon" aria-hidden="true"></i>ADD MEETING</button>
 </div>
 
-<div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModal">
+<div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModal" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -45,6 +45,7 @@
                 <h4 class="modal-title" id="eventModal">Schedule Event</h4>
             </div>
             <div class="modal-body">
+                <div class="alert alert-danger" ng-if="calendarCtrl.displayModalError" ng-bind="calendarCtrl.scheduleModalError"></div>
                 <div class="form-group">
                     <label>Event Title:</label>
                     <input type="text" ng-model="calendarCtrl.eventForm.eventTitle" class="form-control" />
@@ -104,7 +105,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="calendarCtrl.closeMeetingModal()">Close</button>
-                <button type="button" class="btn btn-primary" ng-click="calendarCtrl.saveEvent()">Save changes</button>
+                <button type="button" class="btn btn-primary" ng-click="calendarCtrl.saveEvent()">Continue</button>
             </div>
         </div>
     </div>

@@ -26,7 +26,7 @@
         vm.eventAction = [
             {
                 label: '<i class=\'glyphicon glyphicon-pencil event-icon\' title="Delete"></i>'
-            },{
+            }, {
                 label: '<i class=\'glyphicon glyphicon-trash event-icon\' title="Delete"></i>',
                 onClick: function (args) {
                     vm.displayDeleteModal = true;
@@ -98,6 +98,9 @@
             vm.eventStartDate = '';
             vm.eventEndDate = '';
             vm.displayTravelModes = false;
+            vm.forceSaveEvent = false;
+            vm.displayModalError = false;
+            vm.scheduleModalError = false;
             vm.eventAutocomplete = '';
             vm.otherLocation = '';
             vm.eventForm = {
@@ -172,17 +175,23 @@
                 distance: vm.travelMode.value.distance,
                 time: vm.travelMode.value.duration
             };
-            CalendarService.saveMeeting(vm.eventForm).then(function (data) {
-                var id = data.data;
-                vm.events.push({
-                    id: id,
-                    title: vm.eventForm.eventTitle,
-                    color: calendarConfig.colorTypes.info,
-                    startsAt: new Date(vm.eventForm.eventStart),
-                    endsAt: new Date(vm.eventForm.eventEnd),
-                    actions: vm.eventAction
-                });
-                closeMeetingModal();
+            CalendarService.saveMeeting(vm.eventForm, vm.forceSaveEvent).then(function (data) {
+                if (data.data.errorMessage) {
+                    vm.displayModalError = true;
+                    vm.forceSaveEvent = true;
+                    vm.scheduleModalError = "This event conflicts with another scheduled event. Click Continue to proceed anyways."
+                } else {
+                    var id = data.data;
+                    vm.events.push({
+                        id: id,
+                        title: vm.eventForm.eventTitle,
+                        color: calendarConfig.colorTypes.info,
+                        startsAt: new Date(vm.eventForm.eventStart),
+                        endsAt: new Date(vm.eventForm.eventEnd),
+                        actions: vm.eventAction
+                    });
+                    closeMeetingModal();
+                }
             });
         }
 

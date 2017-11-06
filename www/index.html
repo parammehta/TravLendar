@@ -41,7 +41,7 @@
             </div>
         </div>
     </nav>
-    <div data-ui-view class="main-view"></div>
+    <div ng-if="mainCtrl.isUserAuthenticated" data-ui-view class="main-view"></div>
 
 
     <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="locationModal" data-backdrop="static" data-keyboard="false" ng-if="mainCtrl.displayLocationModal">

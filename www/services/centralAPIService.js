@@ -10,8 +10,9 @@
         var vm = this;
         vm.callAPI = callAPI;
 
-        function callAPI(module, payload, method, deferred) {
+        function callAPI(module, payload, method, deferred, refreshCount) {
             $rootScope.displayLoader = true;
+            var refreshCount = refreshCount || 0;
             var deferredObject = deferred ? deferred : $q.defer();
             var url = CALENDAR_API;
             switch (module) {
@@ -31,12 +32,16 @@
             $http[method](url, payload).then(function (response) {
                 $rootScope.displayLoader = false;
                 deferredObject.resolve(response);
+                console.log(response.status);
             }, function (response) {
-                authService.refresh().then(function () {
-                    callAPI(module, payload, method, deferredObject);
-                }, function (response) {
-                    window.location.replace(AUTH_URL + REDIRECT_URI + "&response_type=code");
-                });
+                console.log(response.status);
+                if (refreshCount < 1) {
+                    authService.refresh().then(function () {
+                        callAPI(module, payload, method, deferredObject, ++refreshCount);
+                    }, function (response) {
+                        window.location.replace(AUTH_URL + REDIRECT_URI + "&response_type=code");
+                    });
+                }
                 $rootScope.displayLoader = false;
             })
             return deferredObject.promise;

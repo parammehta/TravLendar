@@ -71,10 +71,11 @@
             return deferredObject.promise;
         }
         
-        function saveMeeting(eventDetails){
+        function saveMeeting(eventDetails, forceSaveEvent){
             var payload = {
                 operation : "saveEvent",
-                eventDetails : eventDetails
+                eventDetails : eventDetails,
+                forceSaveEvent : forceSaveEvent
             }
             return centralAPIService.callAPI('events', payload, "post");
         }

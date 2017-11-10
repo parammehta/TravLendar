@@ -23,6 +23,7 @@
         vm.closeDeleteModal = closeDeleteModal;
         vm.saveEvent = saveEvent;
         vm.deleteEvent = deleteEvent;
+        vm.alterEventStart = alterEventStart;
         vm.eventAction = [
             {
                 label: '<i class=\'glyphicon glyphicon-pencil event-icon\' title="Delete"></i>'
@@ -49,28 +50,6 @@
         init();
 
         function init() {
-
-            $('#eventStart').datetimepicker({
-                allowInputToggle: true,
-                sideBySide: true
-            });
-
-            $('#eventEnd').datetimepicker({
-                useCurrent: false,
-                allowInputToggle: true,
-                sideBySide: true
-            });
-            $("#eventStart").on("dp.change", function (e) {
-                $('#eventStart').data("DateTimePicker").minDate(moment());
-                $('#eventEnd').data("DateTimePicker").minDate(e.date);
-                vm.eventForm.eventStart = new Date(e.date).getTime();
-                vm.eventStartDate = e.date.format('MM/DD/YYYY h:mm A');
-            });
-            $("#eventEnd").on("dp.change", function (e) {
-                $('#eventStart').data("DateTimePicker").maxDate(e.date);
-                vm.eventForm.eventEnd = new Date(e.date).getTime();
-                vm.eventEndDate = e.date.format('MM/DD/YYYY h:mm A');
-            });
 
             initEventModal();
 
@@ -108,9 +87,15 @@
                 eventStart: null,
                 eventEnd: null
             };
-            $('#eventStart').data("DateTimePicker").maxDate(false);
-            $('#eventStart').data("DateTimePicker").useCurrent(true);
-            $('#eventEnd').data("DateTimePicker").minDate(false);
+
+            vm.eventStart = new Date();
+            vm.eventEnd = moment().add("hours", 1);
+            vm.startDateOptions = {
+                minDate: new Date()
+            }
+            vm.endDateOptions = {
+                minDate: vm.eventStart
+            }
         }
 
         function closeMeetingModal() {
@@ -170,13 +155,15 @@
         function saveEvent() {
             vm.eventForm.originPlaceId = vm.originPlaceId;
             vm.eventForm.destinationPlaceId = vm.destinationPlaceId;
+            vm.eventForm.eventStart = new Date(vm.eventStart).getTime();
+            vm.eventForm.eventEnd = new Date(vm.eventEnd).getTime();
             vm.eventForm.travelMode = {
                 mode: vm.travelMode.mode,
                 distance: vm.travelMode.value.distance,
                 time: vm.travelMode.value.duration
             };
             CalendarService.saveMeeting(vm.eventForm, vm.forceSaveEvent).then(function (data) {
-                if (data.data.errorMessage) {
+                if (data.data.errorMessage && data.data.errorMessage == "Conflict") {
                     vm.displayModalError = true;
                     vm.forceSaveEvent = true;
                     vm.scheduleModalError = "This event conflicts with another scheduled event. Click Continue to proceed anyways."
@@ -191,8 +178,20 @@
                         actions: vm.eventAction
                     });
                     closeMeetingModal();
+                    vm.successMessage = "Event has been added successfully";
+                    vm.displaySuccess = true;
+                    $timeout(function () {
+                        vm.displaySuccess = false;
+                    }, 3000)
                 }
             });
+        }
+
+        function alterEventStart() {
+            if (new Date(vm.eventStart).getTime() > new Date(vm.eventEnd).getTime()) {
+                vm.eventEnd = moment(vm.eventStart).add("hours", 1);
+            }
+            vm.endDateOptions.minDate = vm.eventStart;
         }
 
         function deleteEvent() {

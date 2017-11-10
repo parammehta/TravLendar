@@ -26,6 +26,13 @@
 
         function authenticate() {
             var deferred = $q.defer();
+            if(STAGE == "dev"){
+                $rootScope.idToken = ID_TOKEN;
+                localStorage.setItem("tvRefreshTokendev", REFRESH_TOKEN);
+                localStorage.setItem("tvIDTokendev", $rootScope.idToken);
+                $http.defaults.headers.common.Authorization = $rootScope.idToken;
+                deferred.resolve(true);
+            }
             if (localStorage.getItem("tvIDToken" + STAGE)) {
                 $rootScope.idToken = localStorage.getItem("tvIDToken" + STAGE);
                 $http.defaults.headers.common.Authorization = $rootScope.idToken;

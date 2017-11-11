@@ -1,3 +1,4 @@
 www/server.pem
 www/simplehttpsserver.py
 *.scssc
+www/js/devtokens.js

@@ -16,8 +16,9 @@
         vm.slider={
             options: {
             floor: 0,
-            ceil: 100,
-            step: 1
+            ceil: 10,
+            step: 1,
+            showTicksValues: 1
         }
         }
         

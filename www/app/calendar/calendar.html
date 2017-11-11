@@ -30,7 +30,7 @@
     <strong>Success!</strong><span ng-bind="calendarCtrl.successMessage"></span>
 </div>
 
-<mwl-calendar view="calendarCtrl.calendarView" view-date="calendarCtrl.viewDate" events="calendarCtrl.events" view-title="calendarCtrl.calendarTitle" on-event-click="eventClicked(calendarEvent)" on-event-times-changed="calendarEvent.startsAt = calendarNewEventStart; calendarEvent.endsAt = calendarNewEventEnd" cell-is-open="true">
+<mwl-calendar view="calendarCtrl.calendarView" view-date="calendarCtrl.viewDate" events="calendarCtrl.events" view-title="calendarCtrl.calendarTitle" on-event-click="eventClicked(calendarEvent)" on-event-times-changed="calendarEvent.startsAt = calendarNewEventStart; calendarEvent.endsAt = calendarNewEventEnd;  calendarCtrl.eventTimesChanged(calendarEvent)" cell-is-open="true">
 </mwl-calendar>
 
 <div class="row add-event-row">

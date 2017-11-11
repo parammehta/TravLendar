@@ -1,4 +1,4 @@
-/*global angular, $, moment*/
+/*global angular, $, moment */
 
 (function () {
     'use strict';
@@ -79,15 +79,30 @@
                 for (var i = 0; i < eventList.length; i++) {
                     vm.events.push({
                         id: eventList[i].id,
-                        title: eventList[i].eventTitle,
+                        title:eventList[i].eventTitle,
                         color: calendarConfig.colorTypes.info,
                         startsAt: new Date(eventList[i].eventStart),
                         endsAt: new Date(eventList[i].eventEnd),
-                        actions: vm.eventAction
+                        eventTitle: eventList[i].eventTitle,
+                        eventStart: eventList[i].eventStart,
+                        eventEnd: eventList[i].eventEnd,
+                        destinationPlaceId: eventList[i].destination,
+                        origin: eventList[i].origin,
+                        travelMode: eventList[i].travelMode,
+                        actions: vm.eventAction,
+                        draggable: true
                     });
                 }
             })
         }
+        
+   vm.eventTimesChanged = function(event) {
+        vm.viewDate = event.startsAt;
+    CalendarService.saveMeeting(event, vm.forceSaveEvent).then(function (data) {
+        console.log(data);
+    });
+    }
+
 
         function initEventModal() {
             vm.selectedPriorLocation = "home";

@@ -15,18 +15,65 @@
         vm.eventLocationDetails = {};
         vm.travelMode = null;
         vm.displayDeleteModal = false;
+        vm.displayEditModal = false;
         vm.displaySuccess = false;
         vm.initialAddress = profileService.currentUserLocation || profileService.getCurrentUserLocation();
+        vm.editEventObject = [];
 
         vm.changePriorLocation = changePriorLocation;
         vm.closeMeetingModal = closeMeetingModal;
         vm.closeDeleteModal = closeDeleteModal;
+        vm.editEvent = editEvent;
         vm.saveEvent = saveEvent;
         vm.deleteEvent = deleteEvent;
         vm.alterEventStart = alterEventStart;
         vm.eventAction = [
             {
-                label: '<i class=\'glyphicon glyphicon-pencil event-icon\' title="Delete"></i>'
+                label: '<i class=\'glyphicon glyphicon-pencil event-icon\' title="Edit"></i>',
+                onClick: function (args) {
+                    vm.displayEditModal = true;
+                    vm.currentEventId = args.calendarEvent.id;
+
+                    for (var i = 0; i < vm.events.length; i++) {
+                        if (vm.events[i].id === vm.currentEventId) {
+                            console.log(vm.events[i]);
+                            var editEvent = vm.events[i]
+                            vm.selectedPriorLocation = "";
+                            vm.travelModeArray = [];
+                            vm.otherLocationDetails = {};
+                            vm.destinationPlaceId = null;
+                            vm.originPlaceId = null;
+                            vm.eventStartDate = '';
+                            vm.eventEndDate = '';
+                            vm.displayTravelModes = true;
+                            vm.forceSaveEvent = false;
+                            vm.displayModalError = false;
+                            vm.scheduleModalError = false;
+                            vm.eventAutocomplete = editEvent.destinationPlaceId;
+                            vm.otherLocation = '';
+                            vm.eventForm = {
+                                eventTitle: editEvent.eventTitle,
+                                eventStart: null,
+                                eventEnd: null
+                            };
+
+                            vm.eventStart = new Date(editEvent.eventStart);
+                            vm.eventEnd = new Date(editEvent.eventEnd);//moment().add("hours", 1);
+                            vm.startDateOptions = {
+                                minDate: new Date()
+                            }
+                            vm.endDateOptions = {
+                                minDate: vm.eventStart
+                            }
+                            break;
+                        }
+                    }
+
+                    $timeout(function () {
+                        $("#eventModal").modal('show');
+                    }, 100);
+
+                }
             }, {
                 label: '<i class=\'glyphicon glyphicon-trash event-icon\' title="Delete"></i>',
                 onClick: function (args) {
@@ -46,6 +93,15 @@
                 vm.displayDeleteModal = false;
             }, 1000);
         }
+        
+        function closeEditModal() {
+            $("#eventModal").modal('hide');
+            $timeout(function () {
+                vm.displayEditModal = false;
+            }, 1000);
+            initEventModal();
+        }
+
 
         init();
 
@@ -69,7 +125,8 @@
                         origin: eventList[i].origin,
                         travelMode: eventList[i].travelMode,
                         actions: vm.eventAction,
-                        draggable: true
+                        draggable: true,
+                        resizable:true
                     });
                 }
             })
@@ -226,6 +283,12 @@
                     }
                 }
             });
+        }
+        
+        function editEvent() {
+            console.log("Edit meeting pressed");
+            console.log(vm.currentEventId)
+            
         }
     }
 })();

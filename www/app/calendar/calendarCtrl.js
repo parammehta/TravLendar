@@ -19,7 +19,7 @@
         vm.displaySuccess = false;
         vm.initialAddress = profileService.currentUserLocation || profileService.getCurrentUserLocation();
         vm.editEventObject = [];
-        vm.eventAction = "";
+        vm.eventType = "";
         vm.changePriorLocation = changePriorLocation;
         vm.closeMeetingModal = closeMeetingModal;
         vm.closeDeleteModal = closeDeleteModal;
@@ -27,8 +27,7 @@
         vm.saveEvent = saveEvent;
         vm.deleteEvent = deleteEvent;
         vm.alterEventStart = alterEventStart;
-        vm.eventAction = [
-            {
+        vm.eventAction = [{
                 label: '<i class=\'glyphicon glyphicon-pencil event-icon\' title="Edit"></i>',
                 onClick: function (args) {
                     vm.displayEditModal = true;
@@ -56,7 +55,7 @@
                                 eventStart: null,
                                 eventEnd: null
                             };
-                            vm.eventAction = "edit";
+                            vm.eventType = "edit";
 
                             vm.eventStart = new Date(editEvent.eventStart);
                             vm.eventEnd = new Date(editEvent.eventEnd);//moment().add("hours", 1);
@@ -142,7 +141,7 @@
 
 
         function initEventModal() {
-            vm.eventAction = "save";
+            vm.eventType = "save";
             vm.selectedPriorLocation = "home";
             vm.travelModeArray = [];
             vm.otherLocationDetails = {};
@@ -236,7 +235,7 @@
                 distance: vm.travelMode.value.distance,
                 time: vm.travelMode.value.duration
             };
-            CalendarService.saveMeeting(vm.eventAction, vm.eventForm, vm.forceSaveEvent).then(function (data) {
+            CalendarService.saveMeeting(vm.eventType, vm.eventForm, vm.forceSaveEvent).then(function (data) {
                 if (data.data.errorMessage && data.data.errorMessage == "Conflict") {
                     vm.displayModalError = true;
                     vm.forceSaveEvent = true;

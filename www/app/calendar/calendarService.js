@@ -71,14 +71,14 @@
             return deferredObject.promise;
         }
         
-        function saveMeeting(eventAction, eventDetails, forceSaveEvent){
-            if(eventAction == "save") {
+        function saveMeeting(eventType, eventDetails, forceSaveEvent){
+            if(eventType == "save") {
                 var payload = {
                     operation : "saveEvent",
                     eventDetails : eventDetails,
                     forceSaveEvent : forceSaveEvent
                 }                
-            } else if(eventAction == "edit") {
+            } else if(eventType == "edit") {
                 var payload = {
                     operation : "editEvent",
                     eventDetails : eventDetails,

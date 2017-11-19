@@ -19,7 +19,7 @@
         vm.displaySuccess = false;
         vm.initialAddress = profileService.currentUserLocation || profileService.getCurrentUserLocation();
         vm.editEventObject = [];
-
+        vm.eventAction = "";
         vm.changePriorLocation = changePriorLocation;
         vm.closeMeetingModal = closeMeetingModal;
         vm.closeDeleteModal = closeDeleteModal;
@@ -56,6 +56,7 @@
                                 eventStart: null,
                                 eventEnd: null
                             };
+                            vm.eventAction = "edit";
 
                             vm.eventStart = new Date(editEvent.eventStart);
                             vm.eventEnd = new Date(editEvent.eventEnd);//moment().add("hours", 1);
@@ -141,6 +142,7 @@
 
 
         function initEventModal() {
+            vm.eventAction = "save";
             vm.selectedPriorLocation = "home";
             vm.travelModeArray = [];
             vm.otherLocationDetails = {};
@@ -234,7 +236,7 @@
                 distance: vm.travelMode.value.distance,
                 time: vm.travelMode.value.duration
             };
-            CalendarService.saveMeeting(vm.eventForm, vm.forceSaveEvent).then(function (data) {
+            CalendarService.saveMeeting(vm.eventAction, vm.eventForm, vm.forceSaveEvent).then(function (data) {
                 if (data.data.errorMessage && data.data.errorMessage == "Conflict") {
                     vm.displayModalError = true;
                     vm.forceSaveEvent = true;

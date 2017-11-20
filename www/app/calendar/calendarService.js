@@ -71,7 +71,7 @@
             return deferredObject.promise;
         }
         
-        function saveMeeting(eventType, eventDetails, forceSaveEvent){
+        function saveMeeting(eventType, editEventID, eventDetails, forceSaveEvent){
             if(eventType == "save") {
                 var payload = {
                     operation : "saveEvent",
@@ -81,6 +81,7 @@
             } else if(eventType == "edit") {
                 var payload = {
                     operation : "editEvent",
+                    eventID : editEventID,
                     eventDetails : eventDetails,
                     forceSaveEvent : forceSaveEvent
                 }                

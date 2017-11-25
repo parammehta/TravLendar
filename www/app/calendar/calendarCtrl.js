@@ -35,7 +35,7 @@
 
                     for (var i = 0; i < vm.events.length; i++) {
                         if (vm.events[i].id === vm.currentEventId) {
-                            var eventToModify = vm.events[i]
+                            var eventToModify = vm.events[i];
                             vm.editEventID = eventToModify.id;
                             vm.destination = eventToModify.destination;
                             vm.origin = eventToModify.origin;
@@ -61,7 +61,7 @@
                             vm.eventForm.eventTitle = eventToModify.title;
                             //vm.otherLocation = eventToModify.origin.formatted_address;
                             vm.eventForm = {
-                                eventTitle: eventToModify.eventTitle,
+                                eventTitle: eventToModify.title,
                                 eventStart: null,
                                 eventEnd: null
                             };
@@ -197,7 +197,6 @@
             if (vm.origin && vm.origin.place_id && vm.destination && vm.destination.place_id) {
                 CalendarService.fetchTransitDetails(vm.origin.place_id, vm.destination.place_id).then(function (data) {
                     vm.travelModeArray = data;
-                    console.log(vm.travelModeArray);
                     vm.displayTravelModes = true;
                 });
             }
@@ -206,7 +205,7 @@
         $scope.$watch(function () {
             return vm.eventLocationDetails;
         }, function (newValue) {
-            if (newValue) {
+            if (newValue && newValue.place_id) {
                 vm.destination = {
                     place_id: newValue.place_id,
                     formatted_address: newValue.formatted_address
@@ -218,7 +217,7 @@
         $scope.$watch(function () {
             return vm.otherLocationDetails;
         }, function (newValue) {
-            if (newValue) {
+            if (newValue && newValue.place_id) {
                 vm.origin = {
                     place_id: newValue.place_id,
                     formatted_address: newValue.formatted_address
@@ -258,8 +257,6 @@
                     }
                 }
             }
-            console.log(vm.eventForm.travelMode);
-            //vm.eventForm.travelMode = vm.travelMode;
             CalendarService.saveMeeting(vm.eventType, vm.editEventID, vm.eventForm, vm.forceSaveEvent).then(function (data) {
                 if (data.data.errorMessage && data.data.errorMessage == "Conflict") {
                     vm.displayModalError = true;
@@ -273,6 +270,8 @@
                                 vm.events[i].title = vm.eventForm.eventTitle;
                                 vm.events[i].startsAt = new Date(vm.eventForm.eventStart);
                                 vm.events[i].endsAt = new Date(vm.eventForm.eventEnd);
+                                vm.events[i].eventStart = vm.eventForm.eventStart;
+                                vm.events[i].eventEnd = vm.eventForm.eventEnd;
                                 vm.events[i].origin = vm.origin;
                                 vm.events[i].destination = vm.destination;
                                 vm.events[i].travelMode = vm.eventForm.travelMode;
@@ -286,6 +285,8 @@
                             color: calendarConfig.colorTypes.info,
                             startsAt: new Date(vm.eventForm.eventStart),
                             endsAt: new Date(vm.eventForm.eventEnd),
+                            eventStart : vm.eventForm.eventStart,
+                            eventEnd : vm.eventForm.eventEnd,
                             origin: vm.origin,
                             destination: vm.destination,
                             travelMode: vm.eventForm.travelMode,

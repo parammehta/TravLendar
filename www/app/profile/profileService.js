@@ -26,7 +26,7 @@
         function saveUserLocation(homeDetails, workDetails, lunchDetails, dinnerDetails, walkingDetails) {
 
             var payload = {
-                operation: "saveLocation",
+                operation: "saveProfile",
                 homeLocation: {
                     place_id: homeDetails.place_id,
                     formatted_address: homeDetails.formatted_address

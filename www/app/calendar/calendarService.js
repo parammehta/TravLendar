@@ -71,12 +71,22 @@
             return deferredObject.promise;
         }
         
-        function saveMeeting(eventDetails, forceSaveEvent){
-            var payload = {
-                operation : "saveEvent",
-                eventDetails : eventDetails,
-                forceSaveEvent : forceSaveEvent
-            }
+        function saveMeeting(eventType, editEventID, eventDetails, forceSaveEvent){
+            if(eventType == "save") {
+                var payload = {
+                    operation : "saveEvent",
+                    eventDetails : eventDetails,
+                    forceSaveEvent : forceSaveEvent
+                }                
+            } else if(eventType == "edit") {
+                var payload = {
+                    operation : "editEvent",
+                    eventID : editEventID,
+                    eventDetails : eventDetails,
+                    forceSaveEvent : forceSaveEvent
+                }                
+            } 
+            
             return centralAPIService.callAPI('events', payload, "post");
         }
         

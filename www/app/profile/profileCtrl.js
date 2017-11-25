@@ -23,27 +23,33 @@
         
         }
         
-        var time=[];
-        time.push(new Date(2017,1,1).toLocaleTimeString('en-US', { hour: 'numeric', hour12: true, minute: 'numeric' }));
-        for (var i = 1; i <= 96; i++) {
-            time.push(new Date((2017, 1, 1) + 15*i*60*1000).toLocaleTimeString('en-US', { timeZone: 'UTC', hour: 'numeric', hour12: true, minute: 'numeric' }));
+        var lunchTime=[];
+        lunchTime.push(new Date((2017,1,1)+ 11*60*60*1000).toLocaleTimeString('en-US', { timeZone: 'UTC',hour: 'numeric', hour12: true, minute: 'numeric' }));
+        for (var i = 1; i <= 16; i++) {
+            lunchTime.push(new Date((2017, 1, 1)+ 11*60*60*1000 + 15*i*60*1000).toLocaleTimeString('en-US', { timeZone: 'UTC', hour: 'numeric', hour12: true, minute: 'numeric' }));
         }
         
-        vm.lunchStart=time[0]
-        vm.lunchEnd=time[2]
+        vm.lunchStart=lunchTime[0]
+        vm.lunchEnd=lunchTime[2]
         vm.LunchOptions = {
-                floor: time[0],
-                ceil: time[96],
-                stepsArray: time,
+                floor: lunchTime[0],
+                ceil: lunchTime[16],
+                stepsArray: lunchTime,
              draggableRangeOnly:true,
         };
         
-        vm.dinnerStart=time[0]
-        vm.dinnerEnd=time[2]
+        var dinnerTime=[];
+        dinnerTime.push(new Date((2017,1,1)+ 18*60*60*1000 ).toLocaleTimeString('en-US', { timeZone: 'UTC',hour: 'numeric', hour12: true, minute: 'numeric' }));
+        for (i = 1; i <= 16; i++) {
+            dinnerTime.push(new Date((2017, 1, 1)+ 18*60*60*1000 + 15*i*60*1000).toLocaleTimeString('en-US', { timeZone: 'UTC', hour: 'numeric', hour12: true, minute: 'numeric' }));
+        }
+        
+        vm.dinnerStart=dinnerTime[0]
+        vm.dinnerEnd=dinnerTime[2]
         vm.DinnerOptions = {
-                floor: time[0],
-                ceil: time[96],
-                stepsArray: time,
+                floor: dinnerTime[0],
+                ceil: dinnerTime[16],
+                stepsArray: dinnerTime,
              draggableRangeOnly:true,
                
         };

@@ -64,7 +64,7 @@
         })
 
         function saveUserLocation() {
-            profileService.saveUserLocation(vm.homeDetails, vm.workDetails, vm.lunchDetails, vm.dinnerDetails, vm.walkingDistance).then(function () {
+            profileService.saveUserLocation(vm.homeDetails, vm.workDetails, vm.lunchStart, vm.lunchEnd, vm.dinnerStart, vm.dinnerEnd, vm.walkingDistance).then(function () {
                 
                 profileService.homeLocation = vm.homeDetails;
                 profileService.workLocation = vm.workDetails;

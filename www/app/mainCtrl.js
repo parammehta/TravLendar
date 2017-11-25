@@ -22,10 +22,10 @@
         vm.workDetails = {};
         vm.initialAddress = profileService.currentUserLocation ? profileService.currentUserLocation : profileService.getCurrentUserLocation();
         
-        vm.lunchStart="12:00 AM";
-        vm.lunchEnd= "12:30 AM";
-        vm.dinnerStart="12:00 AM";
-        vm.dinnerEnd="12:30 AM";
+        vm.lunchStart="11:00 AM";
+        vm.lunchEnd= "11:30 AM";
+        vm.dinnerStart="6:00 PM";
+        vm.dinnerEnd="6:30 PM";
         vm.walkingDistance=0;
 
         //functions
@@ -64,7 +64,7 @@
         })
 
         function saveUserLocation() {
-            profileService.saveUserLocation(vm.homeDetails, vm.workDetails, vm.lunchDetails, vm.dinnerDetails, vm.walkingDistance).then(function () {
+            profileService.saveUserLocation(vm.homeDetails, vm.workDetails, vm.lunchStart, vm.lunchEnd, vm.dinnerStart, vm.dinnerEnd , vm.walkingDistance).then(function () {
                 
                 profileService.homeLocation = vm.homeDetails;
                 profileService.workLocation = vm.workDetails;

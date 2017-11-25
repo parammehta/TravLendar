@@ -32,7 +32,6 @@
             $http[method](url, payload).then(function (response) {
                 $rootScope.displayLoader = false;
                 deferredObject.resolve(response);
-                console.log(response.status);
             }, function (response) {
                 console.log(response.status);
                 if (refreshCount < 1) {

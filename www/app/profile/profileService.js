@@ -11,8 +11,10 @@
         vm.currentUserLocation = null;
         vm.homeLocation = null;
         vm.workLocation = null;
-        vm.lunchTime = new Date();
-        vm.dinnerTime = new Date();
+        vm.lunchStart = ""; 
+        vm.lunchEnd="";
+        vm.dinnerStart=null;
+        vm.dinnerEnd = null;
         vm.walkingDistance = 0;
 
         vm.fetchUserLocations = fetchUserLocations;
@@ -23,7 +25,7 @@
             return centralAPIService.callAPI('profile', {}, "get");
         }
 
-        function saveUserLocation(homeDetails, workDetails, lunchDetails, dinnerDetails, walkingDetails) {
+        function saveUserLocation(homeDetails, workDetails, lunchStart, lunchEnd, dinnerStart, dinnerEnd, walkingDetails) {
 
             var payload = {
                 operation: "saveLocation",
@@ -36,17 +38,21 @@
                     formatted_address: workDetails.formatted_address
                 },
                 
-                lunchTime: lunchDetails, 
+                lunchStart: lunchStart, 
+                lunchEnd: lunchEnd,
                 
-                dinnerTime: dinnerDetails,
+                dinnerStart: dinnerStart,
+                dinnerEnd:dinnerEnd,
                 
                 walkingDistance: walkingDetails
                 
             }
             $rootScope.homeLocation = homeDetails;
             $rootScope.workLocation = workDetails;
-            $rootScope.lunchTime=lunchDetails;
-            $rootScope.dinnerTime = dinnerDetails;
+            $rootScope.lunchStart=lunchStart;
+            $rootScope.lunchEnd= lunchEnd;
+            $rootScope.dinnerStart = dinnerStart;
+            $rootScope.dinnerEnd= dinnerEnd; 
             $rootScope.walkingDistance=walkingDetails;
             
             return centralAPIService.callAPI('profile', payload, "post");

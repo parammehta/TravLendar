@@ -16,18 +16,28 @@
     </div>
     <div class="row">
         <div class="col-xs-12 col-md-4">
-            <label>Lunch Time</label>
-            <div uib-timepicker  ng-model="profileCtrl.lunchTime" hour-step="1" minute-step="1" ismeridian = true></div>
+            <label>Lunch Interval</label>  
         </div>
-        <div class="col-xs-12 col-md-4 col-md-offset-4">
-            <label>Dinner Time</label>
-            <div uib-timepicker  ng-model="profileCtrl.dinnerTime" hour-step="1" minute-step="1" ismeridian = true></div>
+        <br/>
+        
+        <rzslider class= "custom-slider"
+          rz-slider-model="profileCtrl.lunchStart"
+          rz-slider-high="profileCtrl.lunchEnd"
+          rz-slider-options="profileCtrl.LunchOptions"></rzslider>
+        
+        <div class="col-xs-12 col-md-4">
+            <label>Dinner Interval</label>   
         </div>
+        <br/>
+         <rzslider class= "custom-slider"
+            rz-slider-model="profileCtrl.dinnerStart"
+          rz-slider-high="profileCtrl.dinnerEnd"
+          rz-slider-options="profileCtrl.DinnerOptions"></rzslider>
     </div>
     <div class="form-group">
         <label>Maximum Walkiing Distance (in miles)</label>
             <br/>
-            <rzslider rz-slider-model="profileCtrl.walkingDistance" rz-slider-options="profileCtrl.slider.options"></rzslider> 
+            <rzslider rz-slider-model="profileCtrl.walkingDistance" rz-slider-options="profileCtrl.walkingOptions"></rzslider> 
         <br/>
     </div>
     <br/>

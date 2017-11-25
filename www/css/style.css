@@ -115,3 +115,8 @@ mwl-calendar .cal-slide-content a.event-item {
   transform: scale(1.8);
   color: green;
 }
+
+/* line 80, ../scss/style.scss */
+.datetimepicker-wrapper > input {
+  width: 100px;
+}

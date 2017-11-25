@@ -13,19 +13,76 @@
         vm.calendarView = "month";
         vm.viewDate = new Date();
         vm.eventLocationDetails = {};
-        vm.travelMode = null;
         vm.displayDeleteModal = false;
+        vm.displayEditModal = false;
         vm.displaySuccess = false;
         vm.initialAddress = profileService.currentUserLocation || profileService.getCurrentUserLocation();
-
+        vm.editEventObject = [];
+        vm.editEventID = "";
+        vm.eventType = "";
         vm.changePriorLocation = changePriorLocation;
         vm.closeMeetingModal = closeMeetingModal;
         vm.closeDeleteModal = closeDeleteModal;
         vm.saveEvent = saveEvent;
         vm.deleteEvent = deleteEvent;
+        vm.alterEventStart = alterEventStart;
         vm.eventAction = [
             {
-                label: '<i class=\'glyphicon glyphicon-pencil event-icon\' title="Delete"></i>'
+                label: '<i class=\'glyphicon glyphicon-pencil event-icon\' title="Edit"></i>',
+                onClick: function (args) {
+                    vm.displayEditModal = true;
+                    vm.currentEventId = args.calendarEvent.id;
+
+                    for (var i = 0; i < vm.events.length; i++) {
+                        if (vm.events[i].id === vm.currentEventId) {
+                            var eventToModify = vm.events[i]
+                            vm.editEventID = eventToModify.id;
+                            vm.destination = eventToModify.destination;
+                            vm.origin = eventToModify.origin;
+                            vm.selectedPriorLocation = "other";
+                            if (vm.origin.place_id == profileService.homeLocation.place_id)
+                                vm.selectedPriorLocation = "home";
+                            if (vm.origin.place_id == profileService.workLocation.place_id)
+                                vm.selectedPriorLocation = "work";
+
+                            vm.travelModeArray = [];
+                            vm.travelMode = eventToModify.travelMode.mode;
+                            CalendarService.fetchTransitDetails(vm.origin.place_id, vm.destination.place_id).then(function (data) {
+                                vm.travelModeArray = data;
+                                vm.displayTravelModes = true;
+                            });
+                            vm.eventStartDate = '';
+                            vm.eventEndDate = '';
+                            vm.displayTravelModes = true;
+                            vm.forceSaveEvent = false;
+                            vm.displayModalError = false;
+                            vm.scheduleModalError = false;
+                            vm.eventAutocomplete = eventToModify.destination.formatted_address;
+                            vm.eventForm.eventTitle = eventToModify.title;
+                            //vm.otherLocation = eventToModify.origin.formatted_address;
+                            vm.eventForm = {
+                                eventTitle: eventToModify.eventTitle,
+                                eventStart: null,
+                                eventEnd: null
+                            };
+                            vm.eventType = "edit";
+
+                            vm.eventStart = new Date(eventToModify.eventStart);
+                            vm.eventEnd = new Date(eventToModify.eventEnd); //moment().add("hours", 1);
+                            vm.startDateOptions = {
+                                minDate: new Date()
+                            }
+                            vm.endDateOptions = {
+                                minDate: vm.eventStart
+                            }
+                            break;
+                        }
+                    }
+                    $timeout(function () {
+                        $("#eventModal").modal('show');
+                    }, 100);
+
+                }
             }, {
                 label: '<i class=\'glyphicon glyphicon-trash event-icon\' title="Delete"></i>',
                 onClick: function (args) {
@@ -46,31 +103,18 @@
             }, 1000);
         }
 
+        function closeEditModal() {
+            $("#eventModal").modal('hide');
+            $timeout(function () {
+                vm.displayEditModal = false;
+            }, 1000);
+            initEventModal();
+        }
+
+
         init();
 
         function init() {
-
-            $('#eventStart').datetimepicker({
-                allowInputToggle: true,
-                sideBySide: true
-            });
-
-            $('#eventEnd').datetimepicker({
-                useCurrent: false,
-                allowInputToggle: true,
-                sideBySide: true
-            });
-            $("#eventStart").on("dp.change", function (e) {
-                $('#eventStart').data("DateTimePicker").minDate(moment());
-                $('#eventEnd').data("DateTimePicker").minDate(e.date);
-                vm.eventForm.eventStart = new Date(e.date).getTime();
-                vm.eventStartDate = e.date.format('MM/DD/YYYY h:mm A');
-            });
-            $("#eventEnd").on("dp.change", function (e) {
-                $('#eventStart').data("DateTimePicker").maxDate(e.date);
-                vm.eventForm.eventEnd = new Date(e.date).getTime();
-                vm.eventEndDate = e.date.format('MM/DD/YYYY h:mm A');
-            });
 
             initEventModal();
 
@@ -79,37 +123,40 @@
                 for (var i = 0; i < eventList.length; i++) {
                     vm.events.push({
                         id: eventList[i].id,
-                        title:eventList[i].eventTitle,
+                        title: eventList[i].eventTitle,
                         color: calendarConfig.colorTypes.info,
                         startsAt: new Date(eventList[i].eventStart),
                         endsAt: new Date(eventList[i].eventEnd),
                         eventTitle: eventList[i].eventTitle,
                         eventStart: eventList[i].eventStart,
                         eventEnd: eventList[i].eventEnd,
-                        destinationPlaceId: eventList[i].destination,
+                        destination: eventList[i].destination,
                         origin: eventList[i].origin,
                         travelMode: eventList[i].travelMode,
                         actions: vm.eventAction,
-                        draggable: true
+                        draggable: true,
+                        resizable: true
                     });
                 }
             })
         }
-        
-   vm.eventTimesChanged = function(event) {
-        vm.viewDate = event.startsAt;
-    CalendarService.saveMeeting(event, vm.forceSaveEvent).then(function (data) {
-        console.log(data);
-    });
-    }
+
+        vm.eventTimesChanged = function (event) {
+            vm.viewDate = event.startsAt;
+            CalendarService.saveMeeting(event, vm.forceSaveEvent).then(function (data) {
+                console.log(data);
+            });
+        }
 
 
         function initEventModal() {
+            vm.eventType = "save";
+            vm.editEventID = "";
             vm.selectedPriorLocation = "home";
             vm.travelModeArray = [];
             vm.otherLocationDetails = {};
-            vm.destinationPlaceId = null;
-            vm.originPlaceId = null;
+            vm.destination = null;
+            vm.origin = null;
             vm.eventStartDate = '';
             vm.eventEndDate = '';
             vm.displayTravelModes = false;
@@ -123,9 +170,15 @@
                 eventStart: null,
                 eventEnd: null
             };
-            $('#eventStart').data("DateTimePicker").maxDate(false);
-            $('#eventStart').data("DateTimePicker").useCurrent(true);
-            $('#eventEnd').data("DateTimePicker").minDate(false);
+
+            vm.eventStart = new Date();
+            vm.eventEnd = moment().add("hours", 1);
+            vm.startDateOptions = {
+                minDate: new Date()
+            }
+            vm.endDateOptions = {
+                minDate: vm.eventStart
+            }
         }
 
         function closeMeetingModal() {
@@ -138,29 +191,38 @@
         function changeLocation() {
             vm.displayTravelModes = false;
             vm.travelMode = null;
-            if (!vm.originPlaceId) {
-                vm.originPlaceId = profileService.homeLocation.place_id;
+            if (!(vm.origin && vm.origin.place_id)) {
+                vm.origin = profileService.homeLocation;
             }
-            CalendarService.fetchTransitDetails(vm.originPlaceId, vm.destinationPlaceId).then(function (data) {
-                vm.travelModeArray = data;
-                vm.displayTravelModes = true;
-            });
+            if (vm.origin && vm.origin.place_id && vm.destination && vm.destination.place_id) {
+                CalendarService.fetchTransitDetails(vm.origin.place_id, vm.destination.place_id).then(function (data) {
+                    vm.travelModeArray = data;
+                    console.log(vm.travelModeArray);
+                    vm.displayTravelModes = true;
+                });
+            }
         }
 
         $scope.$watch(function () {
-            return vm.eventLocationDetails.place_id;
+            return vm.eventLocationDetails;
         }, function (newValue) {
             if (newValue) {
-                vm.destinationPlaceId = newValue;
+                vm.destination = {
+                    place_id: newValue.place_id,
+                    formatted_address: newValue.formatted_address
+                };
                 changeLocation();
             }
         });
 
         $scope.$watch(function () {
-            return vm.otherLocationDetails.place_id;
+            return vm.otherLocationDetails;
         }, function (newValue) {
             if (newValue) {
-                vm.originPlaceId = newValue;
+                vm.origin = {
+                    place_id: newValue.place_id,
+                    formatted_address: newValue.formatted_address
+                };
                 changeLocation();
             }
         });
@@ -172,42 +234,79 @@
             vm.otherLocationDetails = {};
             switch (vm.selectedPriorLocation) {
                 case "home":
-                    vm.originPlaceId = profileService.homeLocation.place_id;
+                    vm.origin = profileService.homeLocation;
                     changeLocation();
                     break;
                 case "work":
-                    vm.originPlaceId = profileService.workLocation.place_id;
+                    vm.origin = profileService.workLocation;
                     changeLocation();
                     break;
             }
         }
 
         function saveEvent() {
-            vm.eventForm.originPlaceId = vm.originPlaceId;
-            vm.eventForm.destinationPlaceId = vm.destinationPlaceId;
-            vm.eventForm.travelMode = {
-                mode: vm.travelMode.mode,
-                distance: vm.travelMode.value.distance,
-                time: vm.travelMode.value.duration
-            };
-            CalendarService.saveMeeting(vm.eventForm, vm.forceSaveEvent).then(function (data) {
-                if (data.data.errorMessage) {
+            vm.eventForm.origin = vm.origin;
+            vm.eventForm.destination = vm.destination;
+            vm.eventForm.eventStart = new Date(vm.eventStart).getTime();
+            vm.eventForm.eventEnd = new Date(vm.eventEnd).getTime();
+            for (var i = 0; i < vm.travelModeArray.length; i++) {
+                if (vm.travelMode === vm.travelModeArray[i].mode) {
+                    vm.eventForm.travelMode = {
+                        mode: vm.travelModeArray[i].mode,
+                        distance: vm.travelModeArray[i].value.distance,
+                        duration: vm.travelModeArray[i].value.duration
+                    }
+                }
+            }
+            console.log(vm.eventForm.travelMode);
+            //vm.eventForm.travelMode = vm.travelMode;
+            CalendarService.saveMeeting(vm.eventType, vm.editEventID, vm.eventForm, vm.forceSaveEvent).then(function (data) {
+                if (data.data.errorMessage && data.data.errorMessage == "Conflict") {
                     vm.displayModalError = true;
                     vm.forceSaveEvent = true;
                     vm.scheduleModalError = "This event conflicts with another scheduled event. Click Continue to proceed anyways."
                 } else {
                     var id = data.data;
-                    vm.events.push({
-                        id: id,
-                        title: vm.eventForm.eventTitle,
-                        color: calendarConfig.colorTypes.info,
-                        startsAt: new Date(vm.eventForm.eventStart),
-                        endsAt: new Date(vm.eventForm.eventEnd),
-                        actions: vm.eventAction
-                    });
+                    if (vm.eventType == "edit") {
+                        for (var i = 0; i < vm.events.length; i++) {
+                            if (vm.events[i].id === id) {
+                                vm.events[i].title = vm.eventForm.eventTitle;
+                                vm.events[i].startsAt = new Date(vm.eventForm.eventStart);
+                                vm.events[i].endsAt = new Date(vm.eventForm.eventEnd);
+                                vm.events[i].origin = vm.origin;
+                                vm.events[i].destination = vm.destination;
+                                vm.events[i].travelMode = vm.eventForm.travelMode;
+                                vm.events[i].actions = vm.eventAction;
+                            }
+                        }
+                    } else {
+                        vm.events.push({
+                            id: id,
+                            title: vm.eventForm.eventTitle,
+                            color: calendarConfig.colorTypes.info,
+                            startsAt: new Date(vm.eventForm.eventStart),
+                            endsAt: new Date(vm.eventForm.eventEnd),
+                            origin: vm.origin,
+                            destination: vm.destination,
+                            travelMode: vm.eventForm.travelMode,
+                            actions: vm.eventAction
+                        });
+                    }
                     closeMeetingModal();
+                    vm.successMessage = "Event has been added successfully";
+                    vm.displaySuccess = true;
+                    $timeout(function () {
+                        vm.displaySuccess = false;
+                    }, 3000)
                 }
             });
+        }
+
+        function alterEventStart() {
+            if (new Date(vm.eventStart).getTime() > new Date(vm.eventEnd).getTime()) {
+                vm.eventEnd = moment(vm.eventStart).add("hours", 1);
+            }
+            vm.endDateOptions.minDate = vm.eventStart;
         }
 
         function deleteEvent() {
@@ -228,5 +327,6 @@
                 }
             });
         }
+
     }
 })();

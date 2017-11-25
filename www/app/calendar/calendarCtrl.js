@@ -267,7 +267,15 @@
                         color: calendarConfig.colorTypes.info,
                         startsAt: new Date(vm.eventForm.eventStart),
                         endsAt: new Date(vm.eventForm.eventEnd),
-                        actions: vm.eventAction
+                        eventTitle: vm.eventForm.eventTitle,
+                        eventStart: vm.eventForm.eventStart,
+                        eventEnd: vm.eventForm.eventEnd,
+                        destination: vm.destination,
+                        origin: vm.origin,
+                        travelMode: vm.travelMode,
+                        actions: vm.eventAction,
+                        draggable: true,
+                        resizable: true
                     });                        
                     closeMeetingModal();
                     vm.successMessage = "Event has been added successfully";

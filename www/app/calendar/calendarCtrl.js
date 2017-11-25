@@ -13,7 +13,6 @@
         vm.calendarView = "month";
         vm.viewDate = new Date();
         vm.eventLocationDetails = {};
-        vm.travelMode = null;
         vm.displayDeleteModal = false;
         vm.displayEditModal = false;
         vm.displaySuccess = false;
@@ -36,20 +35,22 @@
 
                     for (var i = 0; i < vm.events.length; i++) {
                         if (vm.events[i].id === vm.currentEventId) {
-                            console.log(vm.events[i]);
                             var eventToModify = vm.events[i]
                             vm.editEventID = eventToModify.id;
                             vm.destination = eventToModify.destination;
                             vm.origin = eventToModify.origin;
                             vm.selectedPriorLocation = "other";
-                            if(vm.origin.place_id == profileService.homeLocation.place_id)
+                            if (vm.origin.place_id == profileService.homeLocation.place_id)
                                 vm.selectedPriorLocation = "home";
-                            if(vm.origin.place_id == profileService.workLocation.place_id)
+                            if (vm.origin.place_id == profileService.workLocation.place_id)
                                 vm.selectedPriorLocation = "work";
-                            
+
                             vm.travelModeArray = [];
-                            vm.travelMode = eventToModify.travelMode;
-                            vm.otherLocationDetails = {};
+                            vm.travelMode = eventToModify.travelMode.mode;
+                            CalendarService.fetchTransitDetails(vm.origin.place_id, vm.destination.place_id).then(function (data) {
+                                vm.travelModeArray = data;
+                                vm.displayTravelModes = true;
+                            });
                             vm.eventStartDate = '';
                             vm.eventEndDate = '';
                             vm.displayTravelModes = true;
@@ -57,7 +58,8 @@
                             vm.displayModalError = false;
                             vm.scheduleModalError = false;
                             vm.eventAutocomplete = eventToModify.destination.formatted_address;
-                            vm.otherLocation = eventToModify.origin.formatted_address;
+                            vm.eventForm.eventTitle = eventToModify.title;
+                            //vm.otherLocation = eventToModify.origin.formatted_address;
                             vm.eventForm = {
                                 eventTitle: eventToModify.eventTitle,
                                 eventStart: null,
@@ -195,6 +197,7 @@
             if (vm.origin && vm.origin.place_id && vm.destination && vm.destination.place_id) {
                 CalendarService.fetchTransitDetails(vm.origin.place_id, vm.destination.place_id).then(function (data) {
                     vm.travelModeArray = data;
+                    console.log(vm.travelModeArray);
                     vm.displayTravelModes = true;
                 });
             }
@@ -246,7 +249,17 @@
             vm.eventForm.destination = vm.destination;
             vm.eventForm.eventStart = new Date(vm.eventStart).getTime();
             vm.eventForm.eventEnd = new Date(vm.eventEnd).getTime();
-            vm.eventForm.travelMode = vm.travelMode;
+            for (var i = 0; i < vm.travelModeArray.length; i++) {
+                if (vm.travelMode === vm.travelModeArray[i].mode) {
+                    vm.eventForm.travelMode = {
+                        mode: vm.travelModeArray[i].mode,
+                        distance: vm.travelModeArray[i].value.distance,
+                        duration: vm.travelModeArray[i].value.duration
+                    }
+                }
+            }
+            console.log(vm.eventForm.travelMode);
+            //vm.eventForm.travelMode = vm.travelMode;
             CalendarService.saveMeeting(vm.eventType, vm.editEventID, vm.eventForm, vm.forceSaveEvent).then(function (data) {
                 if (data.data.errorMessage && data.data.errorMessage == "Conflict") {
                     vm.displayModalError = true;
@@ -254,21 +267,31 @@
                     vm.scheduleModalError = "This event conflicts with another scheduled event. Click Continue to proceed anyways."
                 } else {
                     var id = data.data;
-                    if(vm.eventType == "edit") {
+                    if (vm.eventType == "edit") {
                         for (var i = 0; i < vm.events.length; i++) {
                             if (vm.events[i].id === id) {
-                                vm.events.splice(i, 1);
+                                vm.events[i].title = vm.eventForm.eventTitle;
+                                vm.events[i].startsAt = new Date(vm.eventForm.eventStart);
+                                vm.events[i].endsAt = new Date(vm.eventForm.eventEnd);
+                                vm.events[i].origin = vm.origin;
+                                vm.events[i].destination = vm.destination;
+                                vm.events[i].travelMode = vm.eventForm.travelMode;
+                                vm.events[i].actions = vm.eventAction;
                             }
                         }
+                    } else {
+                        vm.events.push({
+                            id: id,
+                            title: vm.eventForm.eventTitle,
+                            color: calendarConfig.colorTypes.info,
+                            startsAt: new Date(vm.eventForm.eventStart),
+                            endsAt: new Date(vm.eventForm.eventEnd),
+                            origin: vm.origin,
+                            destination: vm.destination,
+                            travelMode: vm.eventForm.travelMode,
+                            actions: vm.eventAction
+                        });
                     }
-                    vm.events.push({
-                        id: id,
-                        title: vm.eventForm.eventTitle,
-                        color: calendarConfig.colorTypes.info,
-                        startsAt: new Date(vm.eventForm.eventStart),
-                        endsAt: new Date(vm.eventForm.eventEnd),
-                        actions: vm.eventAction
-                    });                        
                     closeMeetingModal();
                     vm.successMessage = "Event has been added successfully";
                     vm.displaySuccess = true;

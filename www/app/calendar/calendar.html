@@ -92,7 +92,7 @@
                     <label>Travel Mode:</label>
                     <table class="travel-mode-table">
                         <tr ng-repeat="travelMode in calendarCtrl.travelModeArray">
-                            <td><input type="radio" ng-model="calendarCtrl.travelMode" ng-value="travelMode"></td>
+                            <td><input type="radio" ng-model="calendarCtrl.travelMode" ng-value="travelMode.mode"></td>
                             <td><i class="fa fa-{{travelMode.icon}} travel-mode-icon"></i></td>
                             <td>{{travelMode.mode}}</td>
                             <td>{{travelMode.value.distance.text}}</td>

@@ -22,8 +22,10 @@
         vm.workDetails = {};
         vm.initialAddress = profileService.currentUserLocation ? profileService.currentUserLocation : profileService.getCurrentUserLocation();
         
-        vm.lunchDetails= new Date();
-        vm.dinnerDetails= new Date();
+        vm.lunchStart="12:00 AM";
+        vm.lunchEnd= "12:30 AM";
+        vm.dinnerStart="12:00 AM";
+        vm.dinnerEnd="12:30 AM";
         vm.walkingDistance=0;
 
         //functions
@@ -43,14 +45,18 @@
                     } else {
                         profileService.homeLocation = data.data.Item.homeLocation;
                         profileService.workLocation = data.data.Item.workLocation;
-                        profileService.lunchTime = data.data.Item.lunchTime;
-                        profileService.dinnerTime = data.data.Item.dinnerTime;
+                        profileService.lunchStart = data.data.Item.lunchStart;
+                        profileService.lunchEnd=data.data.Item.lunchEnd;
+                        profileService.dinnerStart = data.data.Item.dinnerStart;
+                        profileService.dinnerEnd= data.data.Item.dinnerEnd;
                         profileService.walkingDistance = data.data.Item.walkingDistance;
                             
                         $rootScope.homeLocation = data.data.Item.homeLocation;
                         $rootScope.workLocation = data.data.Item.workLocation;
-                        $rootScope.lunchTime=data.data.Item.lunchTime;
-                        $rootScope.dinnerTime= data.data.Item.dinnerTime;
+                        $rootScope.lunchStart=data.data.Item.lunchStart;
+                        $rootScope.lunchEnd=data.data.Item.lunchEnd;
+                        $rootScope.dinnerStart= data.data.Item.dinnerStart;
+                        $rootScope.dinnerEnd=data.data.Item.dinnerEnd;
                         $rootScope.walkingDistance= data.data.Item.walkingDistance;
                     }
                 })
@@ -62,14 +68,18 @@
                 
                 profileService.homeLocation = vm.homeDetails;
                 profileService.workLocation = vm.workDetails;
-                profileService.lunchTime = vm.lunchTime;
-                profileService.dinnerTime=vm.dinnerTime;
+                profileService.lunchStart = vm.lunchStart;
+                profileService.lunchEnd=vm.lunchEnd;
+                profileService.dinnerStart=vm.dinnerStart;
+                profileService.dinnerEnd=vm.dinnerEnd;
                 profileService.walkingDistance= vm.walkingDistance;
                 
                 $rootScope.homeLocation = vm.homeDetails;
                 $rootScope.workLocation = vm.workDetails;
-                $rootScope.lunchTime = vm.lunchTime;
-                $rootScope.dinnerTime= vm.dinnerTime;
+                $rootScope.lunchStart = vm.lunchStart;
+                $rootScope.lunchEnd=vm.lunchEnd;
+                $rootScope.dinnerStart=vm.dinnerStart;
+                $rootScope.dinnerEnd= vm.dinnerEnd;
                 $rootScope.walkingDistance = vm.walkingDistance;
                 
                 $('#locationModal').modal('hide');

@@ -3,15 +3,15 @@
 Travlendar provides a flexible and fully-featured calendar support that considers the travel time between meetings. The application automatically computes and accounts for travel time between appointment making sure that you are never late for an appointent. It also creates overall compatible schedules on a day-basis. 
 
 
-# Getting Started
+## Getting Started
 
-# Prerequisites
+### Prerequisites
 
 The web application is up and running on the domain: https://travlendar.com.
 To run the application locally, you should install http server and host the application on the server.
 
 
-# Installing
+### Installing
 
 1. Download and install nodejs. https://nodejs.org/en/download/.
 2. Check on Terminal if "node" and "npm" command is working.

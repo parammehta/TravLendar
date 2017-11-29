@@ -20,9 +20,9 @@ To run the application locally, you should install http server and host the appl
 5. Execute the following command in the Terminal:
  openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 - keyout key.pem -out cert.pem -config=openssl.cnf
 
-if the -config parameter does not work:
-	5.1 Execute: set OPENSSL_CONF=<path_to_openssl.conf>
-	5.2 Execute: openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout key.pem -out cert.pem
+	if the -config parameter does not work:
+		5.1 Execute: set OPENSSL_CONF=<path_to_openssl.conf>
+		5.2 Execute: openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout key.pem -out cert.pem
 
 6. Make sure you have key.pem and cert.pem in the directory that has Travlendar.
 7. Install http-server
@@ -33,11 +33,11 @@ if the -config parameter does not work:
 
 
 
-Once you have registered and logged into the system, the initial setup requires the User to enter their Home and Work Location as it is an important aspect for the Meeting Schedule. 
+#### Once you have registered and logged into the system, the initial setup requires the User to enter their Home and Work Location as it is an important aspect for the Meeting Schedule. 
 
-The Home page of the application will consists of the Calendar interface with an option to choose either an Year, a Month, a Week or a Day View.
+#### The Home page of the application will consists of the Calendar interface with an option to choose either an Year, a Month, a Week or a Day View.
 
-User can add meeting by clicking on the "ADD Meeting" button and entering the required details of the Meeting. 
+#### User can add meeting by clicking on the "ADD Meeting" button and entering the required details of the Meeting. 
 
-Once the meeting is scheduled successfully, one can see their meeting on the Calendar interface.  
+#### Once the meeting is scheduled successfully, one can see their meeting on the Calendar interface.  
 

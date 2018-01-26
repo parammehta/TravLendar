@@ -1,0 +1,31 @@
+
+import requests
+import json
+def getLocationInformation(event, context):
+    start_placeid = "place_id:ChIJ55fLWVtBkFQR0v31eadEoLM"
+    end_placeid = "place_id:ChIJSxh5JbJqkFQRxI1KoO7oZHs"
+    mode = "bicycling"
+    key = "AIzaSyAFcqYxQE7IZjZtZ7tgMt_wb_1ghRCKbXk"
+
+    url = "https://maps.googleapis.com/maps/api/distancematrix/json"
+    params = {"origins":start_placeid,
+              "destinations": end_placeid,
+              "mode":mode,
+              "key": key}
+
+    response = requests.get(url, params)
+
+    if response.ok:
+        json_response = json.loads(response.content)
+        if json_response is None:
+            return "ERROR"
+
+        if 'rows' not in  json_response or len(json_response['rows']) == 0:
+            return  None
+        row = json_response['rows'][0]
+        try:
+            return row['elements'][0]['duration']['value']
+        except:
+            return "ERROR"
+    else:
+        return "ERROR"

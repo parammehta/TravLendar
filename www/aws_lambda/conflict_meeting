@@ -61,6 +61,32 @@ function isConflictPresent(data){
         return isMeetingOverlaps
 }
 
+function call_lambda_function_to_get_distance(start, end, mode){
+    console.log("Inside the call Lambda function")
+    var aws = require('aws-sdk');
+    var params = {"start": start,
+            "end" : end,
+            "mode": mode
+  };
+
+    var lambda = new aws.Lambda({
+        region: 'us-west-2'
+        });
+    
+lambda.invoke({
+  FunctionName: 'getLocationInformation.getLocationInformation',
+  Payload: JSON.stringify(event, params, 2) // pass params
+}, function(error, data) {
+  if (error) {
+ //   context.done('error', error);
+  }
+  console.log("" + data)
+  if(data.Payload){
+   //context.succeed(data.Payload)
+  }
+    });
+}
+
 
 docClient.query(params, function(err, data) {
     if (err) {
@@ -68,6 +94,7 @@ docClient.query(params, function(err, data) {
         context.fail(err);
     } else {
         console.log(data)
+        call_lambda_function_to_get_distance("", "","")
         if(isConflictPresent(data)){
             context.fail("Conflict is present")
         }else{
